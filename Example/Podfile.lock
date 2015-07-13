@@ -1,0 +1,40 @@
+PODS:
+  - DACircularProgress (2.3.1)
+  - FBSnapshotTestCase (1.8.1)
+  - Nimble (0.4.2)
+  - Nimble-Snapshots (0.4.0):
+    - FBSnapshotTestCase (~> 1.7)
+    - Nimble (~> 0.4)
+    - Quick (~> 0.3)
+  - pop (1.0.7)
+  - Quick (0.3.1)
+  - SDWebImage (3.7.2):
+    - SDWebImage/Core (= 3.7.2)
+  - SDWebImage/Core (3.7.2)
+  - SSImageBrowser (0.1.0):
+    - DACircularProgress
+    - pop
+    - SDWebImage
+
+DEPENDENCIES:
+  - FBSnapshotTestCase
+  - Nimble
+  - Nimble-Snapshots
+  - Quick (~> 0.3.1)
+  - SSImageBrowser (from `../`)
+
+EXTERNAL SOURCES:
+  SSImageBrowser:
+    :path: ../
+
+SPEC CHECKSUMS:
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  FBSnapshotTestCase: 3dc3899168747a0319c5278f5b3445c13a6532dd
+  Nimble: 49b7a7da8919f42823d37c6d68cc6d15a7009f32
+  Nimble-Snapshots: 216ae8c0ea3f4105be1606749fe15d8b2138af40
+  pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
+  Quick: 824572d3d198d51e52cf4aa722cebf7e59952a35
+  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+  SSImageBrowser: f9f586b96e4e9c200d53ef2c48006eab8abfe8e7
+
+COCOAPODS: 0.37.2
