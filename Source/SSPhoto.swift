@@ -12,7 +12,7 @@ import UIKit
 // If you want to handle photos, caching, decompression
 // yourself then you can simply ensure your custom data model
 // conforms to SSPhotoProtocol
-
+import SDWebImage
 public final class SSPhoto: NSObject{
     public var aCaption: String!
     public var photoURL: NSURL!
@@ -22,7 +22,6 @@ public final class SSPhoto: NSObject{
     private var aUnderlyingImage: UIImage!
     private var loadingInProgress: Bool!
     public var  photoPath: String!
-    private var downloadSession: NSURLSession!
     
     
     convenience public init(image: UIImage) {
@@ -42,10 +41,6 @@ public final class SSPhoto: NSObject{
     
     override init() {
         super.init()
-        let sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()
-        
-        downloadSession = NSURLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
-        
     }
 }
 // MARK: - NSURLSessionDelegate
@@ -123,9 +118,27 @@ extension SSPhoto {
                     self.loadImageFromFileAsync()
                 })
             }else if let url = photoURL {
-                let request = NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 0)
-                let getImageTask = downloadSession.downloadTaskWithRequest(request)
-                getImageTask.resume()
+                let key = "\(url.hash)"
+                let CacheCenter = SDImageCache.sharedImageCache()
+                if let cache = CacheCenter.imageFromDiskCacheForKey(key) {
+                    aUnderlyingImage = cache
+                    imageLoadingComplete()
+                    return
+                }
+                SDWebImageDownloader.sharedDownloader().downloadImageWithURL(url, options: SDWebImageDownloaderOptions.ContinueInBackground, progress: { (read, total) -> Void in
+                    let progress = CGFloat(read)/CGFloat(total)
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        progressUpdateBlock?(progress)
+                    })
+                }, completed: { (img, data, err, flag) -> Void in
+                    if let image = img {
+                        self.aUnderlyingImage = image
+                        self.imageLoadingComplete()
+                        CacheCenter.storeImage(image, forKey: key, toDisk: true)
+                    }
+                    
+                })
+                
             }
         }
         
