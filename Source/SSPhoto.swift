@@ -98,7 +98,7 @@ extension SSPhoto {
     
 }
 
-// MARK: - SSPhotoProtocol 
+// MARK: - SSPhotoProtocol
 public func == (lhs: SSPhoto, rhs: SSPhoto) -> Bool {
     return lhs.hashValue == rhs.hashValue
 }
@@ -119,10 +119,13 @@ extension SSPhoto {
                 })
             }else if let url = photoURL {
                 let key = "\(url.hash)"
+                
                 let CacheCenter = SDImageCache.sharedImageCache()
                 if let cache = CacheCenter.imageFromDiskCacheForKey(key) {
-                    aUnderlyingImage = cache
-                    imageLoadingComplete()
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+                        self.aUnderlyingImage = cache
+                        self.imageLoadingComplete()
+                    }
                     return
                 }
                 SDWebImageDownloader.sharedDownloader().downloadImageWithURL(url, options: SDWebImageDownloaderOptions.ContinueInBackground, progress: { (read, total) -> Void in
@@ -130,13 +133,13 @@ extension SSPhoto {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         progressUpdateBlock?(progress)
                     })
-                }, completed: { (img, data, err, flag) -> Void in
-                    if let image = img {
-                        self.aUnderlyingImage = image
-                        self.imageLoadingComplete()
-                        CacheCenter.storeImage(image, forKey: key, toDisk: true)
-                    }
-                    
+                    }, completed: { (img, data, err, flag) -> Void in
+                        if let image = img {
+                            self.aUnderlyingImage = image
+                            self.imageLoadingComplete()
+                            CacheCenter.storeImage(image, forKey: key, toDisk: true)
+                        }
+                        
                 })
                 
             }
@@ -182,7 +185,7 @@ extension SSPhoto {
             infoMask == alphaNoneSkipLast
         
         // CGBitmapContextCreate doesn't support kCGImageAlphaNone with RGB.
-
+        
         if (infoMask == alphaNone && CGColorSpaceGetNumberOfComponents(colorSpace) > 1)
         {
             // Unset the old alpha info.
