@@ -745,7 +745,7 @@ extension SSImageBrowser {
             let resizableImageView = UIImageView(image:imageFromView)
             resizableImageView.frame = senderViewOriginalFrame
             resizableImageView.clipsToBounds = true
-            resizableImageView.contentMode = .ScaleAspectFill
+            resizableImageView.contentMode = .ScaleAspectFit
             resizableImageView.backgroundColor = UIColor(white: useWhiteBackgroundColor ? 1 : 0, alpha:1)
             applicationWindow.addSubview(resizableImageView)
             senderViewForAnimation?.hidden = true
@@ -826,7 +826,7 @@ private func performCloseAnimationWithScrollView(scrollView: SSZoomingScrollView
     
     let resizableImageView = UIImageView(image:imageFromView)
     resizableImageView.frame = imageFromView != nil ? CGRectMake(0, (screenHeight/2)-((imageFromView.size.height / scaleFactor)/2)+scrollView.frame.origin.y, screenWidth, imageFromView.size.height / scaleFactor) : CGRectZero
-    resizableImageView.contentMode = UIViewContentMode.ScaleAspectFill
+    resizableImageView.contentMode = UIViewContentMode.ScaleAspectFit
     resizableImageView.backgroundColor = UIColor.clearColor()
     resizableImageView.clipsToBounds = true
     applicationWindow.addSubview(resizableImageView)

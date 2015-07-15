@@ -9,14 +9,14 @@
 
 Pod::Spec.new do |s|
   s.name             = "SSImageBrowser"
-  s.version          = "0.1.2"
+  s.version          = "0.1.3"
   s.summary          = "IDMPhotoBrowser in Swift"
   s.description      = <<-DESC
                        IDMPhotoBrowser in Swift
                        Photo Browser / Viewer inspired by Facebook's and Tweetbot's with ARC support, swipe-to-dismiss, image progress and more
                        DESC
   s.homepage         = "https://github.com/CodeEagle/SSImageBrowser"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
+  s.screenshots      = "https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss1.png", "https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss2.png","https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss3.png","https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss4.png","https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss5.png"
   s.license          = 'MIT'
   s.author           = { "CodeEagle" => "stasura@hotmail.com" }
   s.source           = { :git => "https://github.com/CodeEagle/SSImageBrowser.git", :tag => s.version.to_s }
