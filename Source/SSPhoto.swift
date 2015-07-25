@@ -7,12 +7,8 @@
 //
 
 import UIKit
-
-// This class models a photo/image and it's caption
-// If you want to handle photos, caching, decompression
-// yourself then you can simply ensure your custom data model
-// conforms to SSPhotoProtocol
 import SDWebImage
+import Photos
 public final class SSPhoto: NSObject{
     public var aCaption: String!
     public var photoURL: NSURL!
@@ -22,7 +18,8 @@ public final class SSPhoto: NSObject{
     private var aUnderlyingImage: UIImage!
     private var loadingInProgress: Bool!
     public var  photoPath: String!
-    
+    public var asset: PHAsset!
+    public var targetSize: CGSize!
     
     convenience public init(image: UIImage) {
         self.init()
@@ -37,6 +34,12 @@ public final class SSPhoto: NSObject{
     convenience public init(url: NSURL) {
         self.init()
         photoURL = url
+    }
+    
+    convenience public init(aAsset: PHAsset, aTargetSize: CGSize) {
+        self.init()
+        asset = aAsset
+        targetSize = aTargetSize
     }
     
     override init() {
@@ -96,6 +99,14 @@ extension SSPhoto {
         return photos
     }
     
+    public class func photosWithAssets(assets: [PHAsset], targetSize: CGSize!) -> [SSPhoto] {
+        var photos = [SSPhoto]()
+        for asset in assets {
+            photos.append(SSPhoto(aAsset: asset, aTargetSize: targetSize))
+        }
+        return photos
+    }
+    
 }
 
 // MARK: - SSPhotoProtocol
@@ -117,7 +128,7 @@ extension SSPhoto {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
                     self.loadImageFromFileAsync()
                 })
-            }else if let url = photoURL {
+            } else if let url = photoURL {
                 let key = "\(url.hash)"
                 
                 let CacheCenter = SDImageCache.sharedImageCache()
@@ -142,7 +153,25 @@ extension SSPhoto {
                         
                 })
                 
+            } else if let photo = asset {
+                var size = CGSizeMake(CGFloat(photo.pixelWidth), CGFloat(photo.pixelHeight))
+                if let asize = targetSize  {
+                    size = asize
+                }
+                weak var wsekf: SSPhoto! = self
+                
+                let progressBlock: PHAssetImageProgressHandler = { (value, error, stop, info) -> Void in
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        wsekf.progressUpdateBlock?(CGFloat(value))
+                    })
+                }
+                photo.imageWithSize(size, progress: progressBlock , done: { (image) -> () in
+                    self.aUnderlyingImage = image
+                    self.imageLoadingComplete()
+                })
+                
             }
+            
         }
         
     }
@@ -162,6 +191,8 @@ extension SSPhoto {
         return aPlaceholderImage
     }
 }
+
+
 // MARK: - Async Loading
 extension SSPhoto {
     func decodedImageWithImage(image:UIImage) -> UIImage? {
@@ -237,4 +268,40 @@ extension SSPhoto {
         loadingInProgress = false
         NSNotificationCenter.defaultCenter().postNotificationName(SSPHOTO_LOADING_DID_END_NOTIFICATION, object: self)
     }
+}
+
+
+extension PHAsset {
+    
+    var identifier: String {
+        return self.localIdentifier.pathComponents[0]
+    }
+    
+    func imageWithSize(size:CGSize, progress: PHAssetImageProgressHandler!, done:(UIImage)->() ){
+        let cache = SDImageCache.sharedImageCache()
+        let key = self.identifier+"_\(size.width)x\(size.height)"
+        if let img = cache.imageFromDiskCacheForKey(key) {
+            done(img)
+            return
+        }
+        let manager = PHImageManager.defaultManager()
+        var option = PHImageRequestOptions()
+        option.synchronous = false
+        option.networkAccessAllowed = true
+        option.normalizedCropRect = CGRect(origin: CGPointZero, size: size)
+        option.resizeMode = .Exact
+        option.progressHandler = progress
+        var thumbnail = UIImage()
+        
+        manager.requestImageForAsset(self, targetSize: size, contentMode: .AspectFill, options: option, resultHandler: {(result, info)->Void in
+            if let img = result {
+                thumbnail = img
+                cache.storeImage(thumbnail, forKey: key, toDisk: true)
+                done(img)
+            }
+        })
+        
+    }
+    
+    
 }
