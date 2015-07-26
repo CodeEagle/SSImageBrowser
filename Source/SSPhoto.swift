@@ -20,6 +20,7 @@ public final class SSPhoto: NSObject{
     public var  photoPath: String!
     public var asset: PHAsset!
     public var targetSize: CGSize!
+    private var requestId: PHImageRequestID!
     
     convenience public init(image: UIImage) {
         self.init()
@@ -36,7 +37,7 @@ public final class SSPhoto: NSObject{
         photoURL = url
     }
     
-    convenience public init(aAsset: PHAsset, aTargetSize: CGSize) {
+    convenience public init(aAsset: PHAsset, aTargetSize: CGSize! = nil) {
         self.init()
         asset = aAsset
         targetSize = aTargetSize
@@ -44,6 +45,20 @@ public final class SSPhoto: NSObject{
     
     override init() {
         super.init()
+        weak var wself: SSPhoto! = self
+        NSNotificationCenter.defaultCenter().addObserverForName("stopAllRequest", object: nil, queue: NSOperationQueue.mainQueue()) { (_) -> Void in
+            wself.cancelRequest()
+        }
+    }
+    
+    deinit {
+        cancelRequest()
+    }
+    
+    func cancelRequest() {
+        if let id = requestId {
+            PHImageManager.defaultManager().cancelImageRequest(id)
+        }
     }
 }
 // MARK: - NSURLSessionDelegate
@@ -99,7 +114,7 @@ extension SSPhoto {
         return photos
     }
     
-    public class func photosWithAssets(assets: [PHAsset], targetSize: CGSize!) -> [SSPhoto] {
+    public class func photosWithAssets(assets: [PHAsset], targetSize: CGSize! = nil) -> [SSPhoto] {
         var photos = [SSPhoto]()
         for asset in assets {
             photos.append(SSPhoto(aAsset: asset, aTargetSize: targetSize))
@@ -165,10 +180,16 @@ extension SSPhoto {
                         wsekf.progressUpdateBlock?(CGFloat(value))
                     })
                 }
-                photo.imageWithSize(size, progress: progressBlock , done: { (image) -> () in
-                    self.aUnderlyingImage = image
-                    self.imageLoadingComplete()
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
+                    wsekf.requestId = photo.imageWithSize(size, progress: progressBlock , done: { (image) -> () in
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            wsekf.aUnderlyingImage = image
+                            wsekf.imageLoadingComplete()
+                        })
+                    })
                 })
+                
+                
                 
             }
             
@@ -181,6 +202,7 @@ extension SSPhoto {
         if aUnderlyingImage != nil && (photoPath != nil || photoURL != nil) {
             aUnderlyingImage = nil
         }
+        cancelRequest()
     }
     
     public func caption() -> String? {
@@ -271,18 +293,18 @@ extension SSPhoto {
 }
 
 
-extension PHAsset {
+public extension PHAsset {
     
-    var identifier: String {
+    public var identifier: String {
         return self.localIdentifier.pathComponents[0]
     }
     
-    func imageWithSize(size:CGSize, progress: PHAssetImageProgressHandler!, done:(UIImage)->() ){
+    public func imageWithSize(size:CGSize, progress: PHAssetImageProgressHandler!, done:(UIImage!)->() ) -> PHImageRequestID! {
         let cache = SDImageCache.sharedImageCache()
         let key = self.identifier+"_\(size.width)x\(size.height)"
         if let img = cache.imageFromDiskCacheForKey(key) {
             done(img)
-            return
+            return nil
         }
         let manager = PHImageManager.defaultManager()
         var option = PHImageRequestOptions()
@@ -291,14 +313,14 @@ extension PHAsset {
         option.normalizedCropRect = CGRect(origin: CGPointZero, size: size)
         option.resizeMode = .Exact
         option.progressHandler = progress
-        var thumbnail = UIImage()
+        option.deliveryMode = .HighQualityFormat
+        option.version = .Original
         
-        manager.requestImageForAsset(self, targetSize: size, contentMode: .AspectFill, options: option, resultHandler: {(result, info)->Void in
+        return manager.requestImageForAsset(self, targetSize: size, contentMode: .AspectFit, options: option, resultHandler: {(result, info)->Void in
             if let img = result {
-                thumbnail = img
-                cache.storeImage(thumbnail, forKey: key, toDisk: true)
-                done(img)
+                cache.storeImage(img, forKey: key, toDisk: true)
             }
+            done(result)
         })
         
     }

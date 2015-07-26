@@ -336,6 +336,11 @@ extension SSImageBrowser {
         releaseAllUnderlyingPhotos()
         recycledPages.removeAll(keepCapacity: false)
     }
+    
+    public override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().postNotificationName("stopAllRequest", object: nil)
+    }
 }
 // MARK: - Public Func
 extension SSImageBrowser {
