@@ -1135,9 +1135,16 @@ private func performCloseAnimationWithScrollView(scrollView: SSZoomingScrollView
                 }
         }
         visiblePages.exclusiveOr(recycledPages)
-        while recycledPages.count > 2 {
-            recycledPages.remove(recycledPages.first!)
+        
+        var pages = Set<SSZoomingScrollView>()
+        if recycledPages.count > 2 {
+            let array = Array(recycledPages)
+            pages.insert(array[0])
+            pages.insert(array[1])
+        } else {
+            pages = recycledPages
         }// Only keep 2 recycled pages
+        recycledPages = pages
         
         
         // Add missing pages
