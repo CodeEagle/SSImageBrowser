@@ -139,7 +139,7 @@ extension SSPhoto {
         if aUnderlyingImage != nil {
             imageLoadingComplete()
         }else{
-            if let path = photoPath {
+            if let _ = photoPath {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
                     self.loadImageFromFileAsync()
                 })
@@ -218,7 +218,7 @@ extension SSPhoto {
 // MARK: - Async Loading
 extension SSPhoto {
     func decodedImageWithImage(image:UIImage) -> UIImage? {
-        if let gif = image.images {
+        if let _ = image.images {
             return image
         }
         
@@ -228,11 +228,11 @@ extension SSPhoto {
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         var bitmapInfo = CGImageGetBitmapInfo(imageRef)
         
-        let infoMask = bitmapInfo & CGBitmapInfo.AlphaInfoMask
+        let infoMask = bitmapInfo.intersect(CGBitmapInfo.AlphaInfoMask)
         
-        let alphaNone = CGBitmapInfo(CGImageAlphaInfo.None.rawValue)
-        let alphaNoneSkipFirst = CGBitmapInfo(CGImageAlphaInfo.NoneSkipFirst.rawValue)
-        let alphaNoneSkipLast = CGBitmapInfo(CGImageAlphaInfo.NoneSkipLast.rawValue)
+        let alphaNone = CGBitmapInfo(rawValue: CGImageAlphaInfo.None.rawValue)
+        let alphaNoneSkipFirst = CGBitmapInfo(rawValue: CGImageAlphaInfo.NoneSkipFirst.rawValue)
+        let alphaNoneSkipLast = CGBitmapInfo(rawValue: CGImageAlphaInfo.NoneSkipLast.rawValue)
         let anyNonAlpha = infoMask == alphaNone ||
             infoMask == alphaNoneSkipFirst ||
             infoMask == alphaNoneSkipLast
@@ -242,21 +242,22 @@ extension SSPhoto {
         if (infoMask == alphaNone && CGColorSpaceGetNumberOfComponents(colorSpace) > 1)
         {
             // Unset the old alpha info.
-            bitmapInfo &= ~CGBitmapInfo.AlphaInfoMask
+            let newBitmapInfoRaw = bitmapInfo.rawValue & ~CGBitmapInfo.AlphaInfoMask.rawValue
             
             // Set noneSkipFirst.
-            bitmapInfo |= alphaNoneSkipFirst
+            bitmapInfo = CGBitmapInfo(rawValue: (newBitmapInfoRaw | alphaNoneSkipFirst.rawValue))
         }
             // Some PNGs tell us they have alpha but only 3 components. Odd.
         else if (!anyNonAlpha && CGColorSpaceGetNumberOfComponents(colorSpace) == 3)
         {
             // Unset the old alpha info.
-            bitmapInfo &= ~CGBitmapInfo.AlphaInfoMask
-            bitmapInfo |= CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.rawValue)
+            let newBitmapInfoRaw = bitmapInfo.rawValue & ~CGBitmapInfo.AlphaInfoMask.rawValue
+//            bitmapInfo &= ~CGBitmapInfo.AlphaInfoMask
+            bitmapInfo = CGBitmapInfo(rawValue: newBitmapInfoRaw | CGImageAlphaInfo.PremultipliedFirst.rawValue)
         }
         
         // It calculates the bytes-per-row based on the bitsPerComponent and width arguments.
-        let context = CGBitmapContextCreate(nil, Int(imageSize.width), Int(imageSize.width), CGImageGetBitsPerComponent(imageRef), 0, colorSpace, bitmapInfo)
+        let context = CGBitmapContextCreate(nil, Int(imageSize.width), Int(imageSize.height), CGImageGetBitsPerComponent(imageRef), 0, colorSpace, bitmapInfo.rawValue)
         
         
         // If failed, return undecompressed image
@@ -265,7 +266,9 @@ extension SSPhoto {
         }
         
         CGContextDrawImage(context, imageRect, imageRef)
-        let decompressedImageRef = CGBitmapContextCreateImage(context)
+        guard let decompressedImageRef = CGBitmapContextCreateImage(context) else {
+            return nil
+        }
         
         let decompressedImage = UIImage(CGImage: decompressedImageRef, scale: image.scale, orientation: image.imageOrientation)
         return decompressedImage
@@ -296,7 +299,7 @@ extension SSPhoto {
 public extension PHAsset {
     
     public var identifier: String {
-        return self.localIdentifier.pathComponents[0]
+        return NSURL(string: self.localIdentifier)?.pathComponents?[0] ?? ""
     }
     
     public func imageWithSize(size:CGSize, progress: PHAssetImageProgressHandler!, done:(UIImage!)->() ) -> PHImageRequestID! {
@@ -307,7 +310,7 @@ public extension PHAsset {
             return nil
         }
         let manager = PHImageManager.defaultManager()
-        var option = PHImageRequestOptions()
+        let option = PHImageRequestOptions()
         option.synchronous = false
         option.networkAccessAllowed = true
         option.normalizedCropRect = CGRect(origin: CGPointZero, size: size)

@@ -1,16 +1,23 @@
 {
   "name": "SSImageBrowser",
-  "version": "0.1.0",
+  "version": "0.1.6",
   "summary": "IDMPhotoBrowser in Swift",
-  "description": "                       IDMPhotoBrowser in Swift, using Alamofire\n                       Photo Browser / Viewer inspired by Facebook's and Tweetbot's with ARC support, swipe-to-dismiss, image progress and more\n",
+  "description": "IDMPhotoBrowser in Swift\nPhoto Browser / Viewer inspired by Facebook's and Tweetbot's with ARC support, swipe-to-dismiss, image progress and more",
   "homepage": "https://github.com/CodeEagle/SSImageBrowser",
+  "screenshots": [
+    "https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss1.png",
+    "https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss2.png",
+    "https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss3.png",
+    "https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss4.png",
+    "https://raw.github.com/appkraft/IDMPhotoBrowser/master/Screenshots/idmphotobrowser_ss5.png"
+  ],
   "license": "MIT",
   "authors": {
     "CodeEagle": "stasura@hotmail.com"
   },
   "source": {
-    "git": "https://github.com/<GITHUB_USERNAME>/SSImageBrowser.git",
-    "tag": "0.1.0"
+    "git": "https://github.com/CodeEagle/SSImageBrowser.git",
+    "tag": "0.1.6"
   },
   "social_media_url": "https://twitter.com/_SelfStudio",
   "platforms": {
@@ -27,7 +34,8 @@
     "QuartzCore",
     "SystemConfiguration",
     "MobileCoreServices",
-    "Security"
+    "Security",
+    "Photos"
   ],
   "dependencies": {
     "pop": [

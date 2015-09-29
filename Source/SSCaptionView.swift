@@ -29,13 +29,14 @@ public class SSCaptionView: UIView {
         setupCaption()
     }
     
-    public required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
     public override init(frame: CGRect) {
         super.init(frame: frame)
     }
+
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
         if let view = self.viewWithTag(101) {
@@ -58,7 +59,7 @@ public class SSCaptionView: UIView {
     public func setupCaption() {
         
         label = UILabel(frame: CGRectMake(labelPadding, 0, self.bounds.size.width-labelPadding*2, self.bounds.size.height))
-        label.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        label.autoresizingMask =  [.FlexibleWidth, .FlexibleHeight]
         label.opaque = false
         label.backgroundColor = UIColor.clearColor()
         label.textAlignment = .Center
@@ -125,7 +126,7 @@ extension SSCaptionView {
         gradient.frame = fadeView.bounds
         gradient.colors = [UIColor(white: 0, alpha: 0).CGColor,UIColor(white: 0, alpha: 0.8).CGColor]
         fadeView.layer.insertSublayer(gradient, atIndex: 0)
-        fadeView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        fadeView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         self.addSubview(fadeView)
     }
     

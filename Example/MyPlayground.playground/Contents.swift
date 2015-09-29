@@ -22,5 +22,5 @@ let c = b.exclusiveOr(a)
 c.first?.tag
 v2.subviews.count
 for index in 0...0 {
-    println("a")
+    print("a")
 }

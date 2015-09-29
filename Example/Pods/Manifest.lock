@@ -1,40 +1,40 @@
 PODS:
   - DACircularProgress (2.3.1)
   - FBSnapshotTestCase (1.8.1)
-  - Nimble (0.4.2)
-  - Nimble-Snapshots (0.4.0):
+  - Nimble (2.0.0-rc.3)
+  - Nimble-Snapshots (1.0.0):
     - FBSnapshotTestCase (~> 1.7)
-    - Nimble (~> 0.4)
-    - Quick (~> 0.3)
-  - pop (1.0.7)
-  - Quick (0.3.1)
-  - SDWebImage (3.7.2):
-    - SDWebImage/Core (= 3.7.2)
-  - SDWebImage/Core (3.7.2)
-  - SSImageBrowser (0.1.0):
+    - Nimble (~> 2.0.0-rc.2)
+    - Quick (~> 0.5)
+  - pop (1.0.8)
+  - Quick (0.6.0)
+  - SDWebImage (3.7.3):
+    - SDWebImage/Core (= 3.7.3)
+  - SDWebImage/Core (3.7.3)
+  - SSImageBrowser (0.1.6):
     - DACircularProgress
     - pop
     - SDWebImage
 
 DEPENDENCIES:
   - FBSnapshotTestCase
-  - Nimble
-  - Nimble-Snapshots
-  - Quick (~> 0.3.1)
+  - Nimble (~> 2.0.0-rc.3)
+  - Nimble-Snapshots (~> 1.0.0)
+  - Quick (~> 0.6.0)
   - SSImageBrowser (from `../`)
 
 EXTERNAL SOURCES:
   SSImageBrowser:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   FBSnapshotTestCase: 3dc3899168747a0319c5278f5b3445c13a6532dd
-  Nimble: 49b7a7da8919f42823d37c6d68cc6d15a7009f32
-  Nimble-Snapshots: 216ae8c0ea3f4105be1606749fe15d8b2138af40
-  pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
-  Quick: 824572d3d198d51e52cf4aa722cebf7e59952a35
-  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
-  SSImageBrowser: f9f586b96e4e9c200d53ef2c48006eab8abfe8e7
+  Nimble: 9dff98ee195ffe7351d3b2fb01d3a1420fd97948
+  Nimble-Snapshots: c16dd279a4840ec06288198fafd53f3c17750ff3
+  pop: bb773ae2c791ca2629de13b347e7a8b450fa6a57
+  Quick: 563686dbcf0ae0f9f7401ac9cd2d786ee1b7f3d7
+  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  SSImageBrowser: de76197315f2fb156ad19f7086a6b08706d5101f
 
-COCOAPODS: 0.37.2
+COCOAPODS: 0.38.2

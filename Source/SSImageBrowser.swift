@@ -102,7 +102,7 @@ public class SSImageBrowser: UIViewController {
         releaseAllUnderlyingPhotos()
     }
 
-    public required init(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         initialize()
     }
@@ -196,13 +196,13 @@ extension SSImageBrowser {
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: UIBarPosition.Any, barMetrics: UIBarMetrics.Default)
         
         // Close Button
-        doneButton = UIButton.buttonWithType(.Custom) as! UIButton
+        doneButton = UIButton(type: .Custom)
         doneButton.frame =  frameForDoneButtonAtOrientation(currentOrientation)
         doneButton.alpha = 1.0
         doneButton.addTarget(self, action: Selector("doneButtonPressed"), forControlEvents: .TouchUpInside)
         
         if doneButtonImage == nil {
-            doneButton.setTitleColor(UIColor(white:0.9, alpha:0.9), forState:.Normal | .Highlighted)
+            doneButton.setTitleColor(UIColor(white:0.9, alpha:0.9), forState:[.Normal, .Highlighted])
             doneButton.setTitle(SSPhotoBrowserLocalizedStrings("Done"), forState:.Normal)
             doneButton.titleLabel?.font = UIFont.boldSystemFontOfSize(11)
             doneButton.backgroundColor = UIColor(white:0.1,alpha:0.5)
@@ -215,16 +215,16 @@ extension SSImageBrowser {
             doneButton.contentMode = .ScaleAspectFit
         }
 
-        let leftButtonImage = (leftArrowImage == nil) ?
+        let _ = (leftArrowImage == nil) ?
             UIImage(named: "Resource/Source/IDMPhotoBrowser.bundle/images/IDMPhotoBrowser_arrowLeft.png") : leftArrowImage
         
-        let rightButtonImage = (rightArrowImage == nil) ?
+        let _ = (rightArrowImage == nil) ?
             UIImage(named: "Resource/Source/IDMPhotoBrowser.bundle/images/IDMPhotoBrowser_arrowRight.png") : rightArrowImage
         
-        let leftButtonSelectedImage = (leftArrowSelectedImage == nil) ?
+        let _ = (leftArrowSelectedImage == nil) ?
             UIImage(named: "Resource/Source/IDMPhotoBrowser.bundle/images/IDMPhotoBrowser_arrowLeftSelected.png")  : leftArrowSelectedImage
         
-        let rightButtonSelectedImage = (rightArrowSelectedImage == nil) ?
+        let _ = (rightArrowSelectedImage == nil) ?
             UIImage(named: "Resource/Source/IDMPhotoBrowser.bundle/images/IDMPhotoBrowser_arrowRightSelected.png") : rightArrowSelectedImage
         
         // Arrows
@@ -503,7 +503,7 @@ extension SSImageBrowser {
                     finalY = -viewHalfHeight
                 }
                 
-                let aDuration:NSTimeInterval = 0.35
+                let _:NSTimeInterval = 0.35
                 UIView.animateWithDuration(NSTimeInterval(animationDuration), animations: { () -> Void in
                     scrollView.center = CGPointMake(finalX, finalY)
                     self.view.backgroundColor = UIColor.clearColor()
@@ -686,13 +686,15 @@ extension SSImageBrowser {
     }
     private func getImageFromView(view: UIView) -> UIImage {
         UIGraphicsBeginImageContext(view.frame.size)
-        view.layer.renderInContext(UIGraphicsGetCurrentContext())
+        if let context = UIGraphicsGetCurrentContext() {
+            view.layer.renderInContext(context)
+        }
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
     }
     private func customToolbarButtonImage(image:UIImage, imageSelected selectedImage:UIImage, action: Selector) -> UIButton {
-        let button = UIButton.buttonWithType(.Custom) as! UIButton
+        let button = UIButton(type: .Custom)
         button.setBackgroundImage(image, forState: .Normal)
         button.setBackgroundImage(selectedImage, forState: .Disabled)
         button.addTarget(self, action: action, forControlEvents: .TouchUpInside)
@@ -718,7 +720,12 @@ extension SSImageBrowser {
         let o = UIApplication.sharedApplication().statusBarOrientation
         if UIInterfaceOrientationIsLandscape(o) {
             let orientation = o == .LandscapeLeft ? UIImageOrientation.Left : UIImageOrientation.Right
-            let rotatedImage = UIImage(CGImage: image.CGImage, scale: 1.0, orientation: orientation)
+            
+            guard let cgImage = image.CGImage else {
+                return nil
+            }
+            
+            let rotatedImage = UIImage(CGImage: cgImage, scale: 1.0, orientation: orientation)
             return rotatedImage
         }
         return image
@@ -801,7 +808,7 @@ private func performCloseAnimationWithScrollView(scrollView: SSZoomingScrollView
     
     weak var wself: SSImageBrowser! = self
     typealias Completion = ()->()
-    var completion: Completion = {
+    let completion: Completion = {
         wself.senderViewForAnimation?.hidden = false
         wself.senderViewForAnimation = nil
         wself.scaleImage = nil
@@ -838,7 +845,7 @@ private func performCloseAnimationWithScrollView(scrollView: SSZoomingScrollView
     self.view.hidden = true
     
     
-    var bcompletion: Completion = {
+    let bcompletion: Completion = {
         wself.senderViewForAnimation?.hidden = false
         wself.senderViewForAnimation = nil
         wself.scaleImage = nil
@@ -1079,7 +1086,7 @@ private func performCloseAnimationWithScrollView(scrollView: SSZoomingScrollView
         page.frame = frameForPageAtIndex(index)
         page.tag = PAGE_INDEX_TAG_OFFSET + index
         page.setAPhoto(photoAtIndex(index))
-        var wPhoto = page.photo
+        let wPhoto = page.photo
         weak var wPage: SSZoomingScrollView! = page
         wPhoto!.progressUpdateBlock = {
             (progress) -> Void in
@@ -1134,7 +1141,7 @@ private func performCloseAnimationWithScrollView(scrollView: SSZoomingScrollView
                     page.removeFromSuperview()
                 }
         }
-        visiblePages.exclusiveOr(recycledPages)
+        let _ = visiblePages.exclusiveOr(recycledPages)
         
         var pages = Set<SSZoomingScrollView>()
         if recycledPages.count > 2 {
@@ -1209,7 +1216,7 @@ private func performCloseAnimationWithScrollView(scrollView: SSZoomingScrollView
                 weak var wself : SSImageBrowser! = self
                 
                 
-                for (index, atitle) in enumerate(actionButtonTitles) {
+                for (index, atitle) in actionButtonTitles.enumerate() {
                     let action = UIAlertAction(title: atitle, style: UIAlertActionStyle.Default, handler:{
                         (aAction) -> Void in
                         wself.actionsSheet = nil
@@ -1218,7 +1225,7 @@ private func performCloseAnimationWithScrollView(scrollView: SSZoomingScrollView
                     })
                     actionsSheet.addAction(action)
                 }
-                let action = UIAlertAction(title: SSPhotoBrowserLocalizedStrings("Cancel"), style: UIAlertActionStyle.Cancel, handler:{
+                let _ = UIAlertAction(title: SSPhotoBrowserLocalizedStrings("Cancel"), style: UIAlertActionStyle.Cancel, handler:{
                     (aAction) -> Void in
                     wself.actionsSheet = nil
                     wself.hideControlsAfterDelay()
@@ -1259,7 +1266,7 @@ extension SSImageBrowser {
         
         var finalTask: CancelableTask?
         
-        var cancelableTask: CancelableTask = { cancel in
+        let cancelableTask: CancelableTask = { cancel in
             if cancel {
                 finalTask = nil // key
                 

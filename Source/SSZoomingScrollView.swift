@@ -25,7 +25,7 @@ public class SSZoomingScrollView : UIScrollView {
         // Tap view for background
          tapView = SSTapDetectingView(frame:self.bounds)
          tapView.tapDelegate = self 
-         tapView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+         tapView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
          tapView.backgroundColor = UIColor.clearColor()
          self.addSubview(tapView)
         
@@ -59,10 +59,10 @@ public class SSZoomingScrollView : UIScrollView {
         self.showsHorizontalScrollIndicator = false
         self.showsVerticalScrollIndicator = false
         self.decelerationRate = UIScrollViewDecelerationRateFast 
-        self.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight
+        self.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, UIViewAutoresizing.FlexibleHeight]
     }
     
-    public required init(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     override init(frame: CGRect) {
@@ -230,15 +230,19 @@ extension SSZoomingScrollView: UIScrollViewDelegate {
     public func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
         return photoImageView
     }
+    
     public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
         photoBrowser.cancelControlHiding()
     }
-    public func scrollViewWillBeginZooming(scrollView: UIScrollView, withView view: UIView!) {
+
+    public func scrollViewWillBeginZooming(scrollView: UIScrollView, withView view: UIView?) {
         photoBrowser.cancelControlHiding()
     }
+    
     public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         photoBrowser.hideControlsAfterDelay()
     }
+    
     public func scrollViewDidZoom(scrollView: UIScrollView) {
         self.setNeedsLayout()
         self.layoutIfNeeded()
