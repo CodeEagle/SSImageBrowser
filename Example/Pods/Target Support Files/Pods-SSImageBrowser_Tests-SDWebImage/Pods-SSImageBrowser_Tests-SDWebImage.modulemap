@@ -1,6 +1,0 @@
-framework module SDWebImage {
-  umbrella header "Pods-SSImageBrowser_Tests-SDWebImage-umbrella.h"
-
-  export *
-  module * { export * }
-}

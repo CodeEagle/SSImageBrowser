@@ -15,7 +15,7 @@ class TableViewController: UITableViewController {
         
         let tableViewFooter = UIView(frame:CGRectMake(0, 0, 320, 426 * 0.9 + 40))
         
-        let buttonWithImageOnScreen1 = UIButton.buttonWithType(.Custom) as! UIButton
+        let buttonWithImageOnScreen1 = UIButton(type: .Custom)
         buttonWithImageOnScreen1.frame = CGRectMake(15, 0, 640/3 * 0.9, 426/2 * 0.9)
         buttonWithImageOnScreen1.tag = 101
         buttonWithImageOnScreen1.adjustsImageWhenHighlighted = false
@@ -26,7 +26,7 @@ class TableViewController: UITableViewController {
         buttonWithImageOnScreen1.addTarget(self, action: Selector("buttonWithImageOnScreenPressed:"), forControlEvents: .TouchUpInside)
         tableViewFooter.addSubview(buttonWithImageOnScreen1)
         
-        let buttonWithImageOnScreen2 = UIButton.buttonWithType(.Custom) as! UIButton
+        let buttonWithImageOnScreen2 = UIButton(type: .Custom)
         buttonWithImageOnScreen2.frame = CGRectMake(15, 426/2 * 0.9 + 20, 640/2 * 0.9, 426/2 * 0.9)
         buttonWithImageOnScreen2.tag = 102
         buttonWithImageOnScreen2.adjustsImageWhenHighlighted = false
@@ -86,7 +86,7 @@ class TableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let   CellIdentifier = "Cell"
-        var cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as? UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier)
         if cell == nil {
             cell = UITableViewCell(style:.Default, reuseIdentifier:CellIdentifier)
         }

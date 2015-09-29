@@ -31,7 +31,7 @@ public class SSTapDetectingImageView: UIImageView {
         initialize()
     }
     
-    public required init(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         initialize()
     }
@@ -43,8 +43,11 @@ public class SSTapDetectingImageView: UIImageView {
 }
 extension SSTapDetectingImageView {
     
-    public override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-        let touch = touches.first as! UITouch
+    public override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        guard let touch = touches.first else {
+            return
+        }
+
         let tapCount = touch.tapCount
         switch tapCount {
         case 1:
@@ -60,5 +63,6 @@ extension SSTapDetectingImageView {
             break
         }
         self.nextResponder()?.touchesEnded(touches, withEvent: event)
+
     }
 }
