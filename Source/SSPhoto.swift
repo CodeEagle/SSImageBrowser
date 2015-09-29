@@ -218,7 +218,7 @@ extension SSPhoto {
 // MARK: - Async Loading
 extension SSPhoto {
     func decodedImageWithImage(image:UIImage) -> UIImage? {
-        if let gif = image.images {
+        if let _ = image.images {
             return image
         }
         
