@@ -37,7 +37,6 @@
 
 /* Begin PBXFileReference section */
 		0BFC96CABAA14040585664A5 /* Pods-SSImageBrowser_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSImageBrowser_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SSImageBrowser_Tests/Pods-SSImageBrowser_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		16C325AA1B50A8FF00320F3A /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 		16F1B6C81B521D1A003BF3CD /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		16F1B6CB1B521FA6003BF3CD /* photo1l.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = photo1l.jpg; sourceTree = "<group>"; };
 		16F1B6CC1B521FA6003BF3CD /* photo1m.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = photo1m.jpg; sourceTree = "<group>"; };
@@ -105,7 +104,6 @@
 			isa = PBXGroup;
 			children = (
 				16F1B6CA1B521FA6003BF3CD /* Photos */,
-				16C325AA1B50A8FF00320F3A /* MyPlayground.playground */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for SSImageBrowser */,
 				607FACE81AFB9204008FA782 /* Tests */,
