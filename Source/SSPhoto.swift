@@ -157,7 +157,7 @@ extension SSPhoto {
                 SDWebImageDownloader.sharedDownloader().downloadImageWithURL(url, options: SDWebImageDownloaderOptions.ContinueInBackground, progress: { (read, total) -> Void in
                     let progress = CGFloat(read)/CGFloat(total)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        progressUpdateBlock?(progress)
+                        self.progressUpdateBlock?(progress)
                     })
                     }, completed: { (img, data, err, flag) -> Void in
                         if let image = img {

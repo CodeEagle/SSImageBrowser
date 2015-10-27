@@ -1,1 +1,6 @@
-SSIMAGEBROWSER_OTHER_LDFLAGS = -framework "MessageUI" -framework "MobileCoreServices" -framework "Photos" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/SSImageBrowser" "${PODS_ROOT}/Headers/Public"
+OTHER_LDFLAGS = -framework "MessageUI" -framework "MobileCoreServices" -framework "Photos" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration"
+OTHER_SWIFT_FLAGS = $(inherited) "-D" "COCOAPODS"
+PODS_ROOT = ${SRCROOT}
+SKIP_INSTALL = YES
