@@ -21,7 +21,7 @@ class TableViewController: UITableViewController {
         buttonWithImageOnScreen1.adjustsImageWhenHighlighted = false
         buttonWithImageOnScreen1.setImage(UIImage(named: "photo1m.jpg"), forState: .Normal)
         
-        buttonWithImageOnScreen1.imageView?.contentMode = .ScaleAspectFill
+        buttonWithImageOnScreen1.imageView?.contentMode = .ScaleAspectFit
         buttonWithImageOnScreen1.backgroundColor = UIColor.blackColor()
         buttonWithImageOnScreen1.addTarget(self, action: Selector("buttonWithImageOnScreenPressed:"), forControlEvents: .TouchUpInside)
         tableViewFooter.addSubview(buttonWithImageOnScreen1)

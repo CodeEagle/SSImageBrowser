@@ -43,7 +43,7 @@ func SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(to:String) -> Bool{
 }
 
 func SSPhotoBrowserLocalizedStrings(key: String) -> String{
-    if let path = NSBundle.mainBundle().pathForResource("IDMPBLocalizations", ofType: "bundle") {
+    if let path = NSBundle(forClass: SSImageBrowser.self).pathForResource("IDMPBLocalizations", ofType: "bundle") {
         if let bundle = NSBundle(path: path) {
             return NSLocalizedString(key, bundle: bundle, comment: key)
         }
