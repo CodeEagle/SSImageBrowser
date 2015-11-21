@@ -9,7 +9,7 @@
 import UIKit
 import SDWebImage
 import Photos
-public final class SSPhoto: NSObject{
+public final class SSPhoto: NSObject {
     public var aCaption: String!
     public var photoURL: NSURL!
     public var progressUpdateBlock: SSProgressUpdateBlock!
@@ -45,9 +45,8 @@ public final class SSPhoto: NSObject{
     
     override init() {
         super.init()
-        weak var wself: SSPhoto! = self
-        NSNotificationCenter.defaultCenter().addObserverForName("stopAllRequest", object: nil, queue: NSOperationQueue.mainQueue()) { (_) -> Void in
-            wself.cancelRequest()
+        NSNotificationCenter.defaultCenter().addObserverForName("stopAllRequest", object: nil, queue: NSOperationQueue.mainQueue()) {[weak self] (_) -> Void in
+            self?.cancelRequest()
         }
     }
     
@@ -144,26 +143,25 @@ extension SSPhoto {
                     self.loadImageFromFileAsync()
                 })
             } else if let url = photoURL {
-                let key = "\(url.hash)"
+                let key = url.absoluteString
                 
-                let CacheCenter = SDImageCache.sharedImageCache()
-                if let cache = CacheCenter.imageFromDiskCacheForKey(key) {
+                if let cache = SDImageCache.sharedImageCache().imageFromDiskCacheForKey(key) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
                         self.aUnderlyingImage = cache
                         self.imageLoadingComplete()
                     }
                     return
                 }
-                SDWebImageDownloader.sharedDownloader().downloadImageWithURL(url, options: SDWebImageDownloaderOptions.ContinueInBackground, progress: { (read, total) -> Void in
+                SDWebImageDownloader.sharedDownloader().downloadImageWithURL(url, options: SDWebImageDownloaderOptions.ContinueInBackground, progress: {[weak self] (read, total) -> Void in
+                    guard let sself = self else { return }
                     let progress = CGFloat(read)/CGFloat(total)
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.progressUpdateBlock?(progress)
+                        sself.progressUpdateBlock?(progress)
                     })
-                    }, completed: { (img, data, err, flag) -> Void in
-                        if let image = img {
-                            self.aUnderlyingImage = image
-                            self.imageLoadingComplete()
-                            CacheCenter.storeImage(image, forKey: key, toDisk: true)
+                    }, completed: {[weak self] (img, data, err, flag) -> Void in
+                        if let image = img, sself = self {
+                            sself.aUnderlyingImage = image
+                            sself.imageLoadingComplete()
                         }
                         
                 })
