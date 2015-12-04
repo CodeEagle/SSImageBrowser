@@ -16,6 +16,7 @@ import pop
     optional func photoBrowser(photoBrowser: SSImageBrowser, captionViewForPhotoAtIndex index: Int) -> SSCaptionView!
     optional func photoBrowser(photoBrowser: SSImageBrowser, didDismissActionSheetWithButtonIndex index: Int, photoIndex: Int)
 }
+public let UIApplicationSaveImageToCameraRoll = "UIApplicationSaveImageToCameraRoll"
 // MARK: - SSImageBrowser
 public class SSImageBrowser: UIViewController {
     
@@ -1176,12 +1177,16 @@ extension SSImageBrowser {
                     if let caption = photo.caption() {
                         activityItems.append(caption)
                     }
+                    
                     activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
                     
                     activityViewController.completionWithItemsHandler = {[weak self]
-                        (activityType,completed,returnedItems,activityError) -> Void in
+                        (activityType, completed, returnedItems, activityError) -> Void in
                         guard let sself = self else { return }
                         sself.hideControlsAfterDelay()
+                        if activityType == "com.apple.UIKit.activity.SaveToCameraRoll" {
+                            NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationSaveImageToCameraRoll, object: sself)
+                        }
                         sself.activityViewController = nil
                     }
                     presentViewController(activityViewController, animated: true, completion: nil)
