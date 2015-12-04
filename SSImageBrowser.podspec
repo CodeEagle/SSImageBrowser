@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SSImageBrowser"
-  s.version          = "2.0.3"
+  s.version          = "2.0.3.1"
   s.summary          = "IDMPhotoBrowser in Swift"
   s.description      = <<-DESC
                        IDMPhotoBrowser in Swift
