@@ -41,7 +41,8 @@ public class SSImageBrowser: UIViewController {
     public weak var leftArrowSelectedImage: UIImage!
     public weak var rightArrowImage: UIImage!
     public weak var rightArrowSelectedImage: UIImage!
-    public weak var doneButtonImage: UIImage!
+    public var doneButtonImage: UIImage!
+    public var doneButtonImageForeground: UIImage!
     public weak var scaleImage: UIImage!
     
     public weak var trackTintColor: UIColor!
@@ -149,7 +150,7 @@ extension SSImageBrowser {
         senderViewForAnimation = view
         performPresentAnimation()
     }
-    
+
     public convenience init(aURLs: [NSURL], animatedFromView view: UIView! = nil) {
         self.init()
         let aPhotos = SSPhoto.photosWithURLs(aURLs)
@@ -193,19 +194,6 @@ extension SSImageBrowser {
         doneButton.frame =  frameForDoneButtonAtOrientation(currentOrientation)
         doneButton.alpha = 1.0
         doneButton.addTarget(self, action: Selector("doneButtonPressed"), forControlEvents: .TouchUpInside)
-        
-        if doneButtonImage == nil {
-            doneButton.setTitleColor(UIColor(white: 0.9, alpha: 0.9), forState:[.Normal, .Highlighted])
-            doneButton.setTitle(SSPhotoBrowserLocalizedStrings("X"), forState: .Normal)
-            doneButton.titleLabel?.font        = UIFont.boldSystemFontOfSize(11)
-            doneButton.backgroundColor = UIColor(white: 0.1, alpha: 0.5)
-            doneButton.sizeToFit()
-            doneButton.layer.cornerRadius = doneButton.bounds.size.width/2
-        }
-        else {
-            doneButton.setBackgroundImage(doneButtonImage, forState: .Normal)
-            doneButton.contentMode = .ScaleAspectFit
-        }
         
         let bundle = NSBundle(forClass: SSImageBrowser.self)
         var imageBundle: NSBundle?
@@ -267,6 +255,21 @@ extension SSImageBrowser {
         
         // Update UI
         hideControlsAfterDelay()
+
+        if doneButtonImage == nil && doneButtonImageForeground == nil {
+            doneButton.setTitleColor(UIColor(white: 0.9, alpha: 0.9), forState:[.Normal, .Highlighted])
+            doneButton.setTitle(SSPhotoBrowserLocalizedStrings("X"), forState: .Normal)
+            doneButton.titleLabel?.font = UIFont.boldSystemFontOfSize(11)
+            doneButton.backgroundColor = UIColor(white: 0.1, alpha: 0.5)
+            doneButton.sizeToFit()
+            doneButton.layer.cornerRadius = doneButton.bounds.size.width/2
+        } else if doneButtonImageForeground != nil {
+            doneButton.setImage(doneButtonImageForeground, forState: .Normal)
+            doneButton.contentMode = .Center
+        } else if doneButtonImage != nil {
+            doneButton.setBackgroundImage(doneButtonImage, forState: .Normal)
+            doneButton.contentMode = .ScaleAspectFit
+        }
     }
     
     public override func viewDidAppear(animated: Bool) {
@@ -658,7 +661,6 @@ extension SSImageBrowser {
     }
     
     private func dismissPhotoBrowserAnimated(animated: Bool) {
-        
         modalTransitionStyle = .CrossDissolve
         delegate?.photoBrowser?(self, willDismissAtPageIndex: currentPageIndex)
         dismissViewControllerAnimated(animated, completion: {[weak self] in
@@ -712,7 +714,6 @@ extension SSImageBrowser {
     }
     
     private func performPresentAnimation() {
-        
         view.alpha = 0.0
         pagingScrollView.alpha = 0.0
         
@@ -774,7 +775,6 @@ extension SSImageBrowser {
     }
     
     private func performCloseAnimationWithScrollView(scrollView: SSZoomingScrollView) {
-        
         let fadeAlpha = 1 - fabs(scrollView.frame.origin.y)/scrollView.frame.size.height
         
         var imageFromView = scrollView.photo.underlyingImage()
@@ -858,7 +858,7 @@ extension SSImageBrowser {
     // MARK: - Layout
     
     private func performLayout() {
-        
+
         performingLayout = true
         let photosCount = numberOfPhotos()
         
@@ -1241,7 +1241,7 @@ extension SSImageBrowser {
     typealias CancelableTask = (cancel: Bool) -> Void
     
     func delay(time: NSTimeInterval, work: dispatch_block_t) -> CancelableTask? {
-        
+
         var finalTask: CancelableTask?
         
         let cancelableTask: CancelableTask = { cancel in
