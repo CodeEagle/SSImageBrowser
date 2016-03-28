@@ -120,8 +120,7 @@ public class SSImageBrowser: UIViewController {
         modalPresentationCapturesStatusBarAppearance = true
         applicationWindow                            = UIApplication.sharedApplication().delegate?.window!
         // Listen for IDMPhoto notifications
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("handleSSPhotoLoadingDidEndNotification:"), name: SSPHOTO_LOADING_DID_END_NOTIFICATION, object: nil)
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleSSPhotoLoadingDidEndNotification(_:)), name: SSPHOTO_LOADING_DID_END_NOTIFICATION, object: nil)
     }
     
     // MARK: - SSPhoto Loading Notification
@@ -193,7 +192,7 @@ extension SSImageBrowser {
         doneButton = UIButton(type: .Custom)
         doneButton.frame =  frameForDoneButtonAtOrientation(currentOrientation)
         doneButton.alpha = 1.0
-        doneButton.addTarget(self, action: Selector("doneButtonPressed"), forControlEvents: .TouchUpInside)
+        doneButton.addTarget(self, action: #selector(doneButtonPressed), forControlEvents: .TouchUpInside)
         
         let bundle = NSBundle(forClass: SSImageBrowser.self)
         var imageBundle: NSBundle?
@@ -214,9 +213,9 @@ extension SSImageBrowser {
         let rightOn = rightArrowSelectedImage ?? rightOff
         
         // Arrows
-        previousButton = UIBarButtonItem(customView:customToolbarButtonImage(leftOff, imageSelected: leftOn!, action: Selector("gotoPreviousPage")))
+        previousButton = UIBarButtonItem(customView:customToolbarButtonImage(leftOff, imageSelected: leftOn!, action: #selector(gotoPreviousPage)))
         
-        nextButton = UIBarButtonItem(customView:customToolbarButtonImage(rightOff, imageSelected: rightOn!, action: Selector("gotoNextPage")))
+        nextButton = UIBarButtonItem(customView:customToolbarButtonImage(rightOff, imageSelected: rightOn!, action: #selector(gotoNextPage)))
         
         // Counter Label
         counterLabel                 = UILabel(frame: CGRectMake(0, 0, 95, 40))
@@ -237,10 +236,10 @@ extension SSImageBrowser {
         counterButton = UIBarButtonItem(customView: counterLabel)
         
         // Action Button
-        actionButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: Selector("actionButtonPressed:"))
+        actionButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(actionButtonPressed(_:)))
         
         // Gesture
-        panGesture = UIPanGestureRecognizer(target:self, action: Selector("panGestureRecognized:"))
+        panGesture = UIPanGestureRecognizer(target:self, action: #selector(panGestureRecognized(_:)))
         panGesture.minimumNumberOfTouches = 1
         panGesture.maximumNumberOfTouches = 1
         

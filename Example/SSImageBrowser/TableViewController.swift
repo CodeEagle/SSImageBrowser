@@ -23,7 +23,7 @@ class TableViewController: UITableViewController {
         
         buttonWithImageOnScreen1.imageView?.contentMode = .ScaleAspectFit
         buttonWithImageOnScreen1.backgroundColor = UIColor.blackColor()
-        buttonWithImageOnScreen1.addTarget(self, action: Selector("buttonWithImageOnScreenPressed:"), forControlEvents: .TouchUpInside)
+        buttonWithImageOnScreen1.addTarget(self, action: #selector(buttonWithImageOnScreenPressed(_:)), forControlEvents: .TouchUpInside)
         tableViewFooter.addSubview(buttonWithImageOnScreen1)
         
         let buttonWithImageOnScreen2 = UIButton(type: .Custom)
@@ -33,7 +33,7 @@ class TableViewController: UITableViewController {
         buttonWithImageOnScreen2.setImage(UIImage(named: "photo3m.jpg"), forState: .Normal)
         buttonWithImageOnScreen2.imageView?.contentMode = .ScaleAspectFit
         buttonWithImageOnScreen2.backgroundColor = UIColor.blackColor()
-        buttonWithImageOnScreen2.addTarget(self, action: Selector("buttonWithImageOnScreenPressed:"), forControlEvents: .TouchUpInside)
+        buttonWithImageOnScreen2.addTarget(self, action: #selector(buttonWithImageOnScreenPressed(_:)), forControlEvents: .TouchUpInside)
         tableViewFooter.addSubview(buttonWithImageOnScreen2)
         
         self.tableView.tableFooterView = tableViewFooter

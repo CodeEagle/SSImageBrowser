@@ -1,6 +1,0 @@
-framework module Pods_SSImageBrowser_Tests {
-  umbrella header "Pods-SSImageBrowser_Tests-umbrella.h"
-
-  export *
-  module * { export * }
-}
