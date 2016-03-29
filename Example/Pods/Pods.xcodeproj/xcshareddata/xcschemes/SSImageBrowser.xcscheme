@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '95615BD9C50F351112D7543F'
+               BlueprintIdentifier = '1685A39FD85BB2C0E0D2A7D0'
                BlueprintName = 'SSImageBrowser'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'SSImageBrowser.framework'>
