@@ -29,5 +29,5 @@ Pod::Spec.new do |s|
   s.frameworks = 'MessageUI', 'QuartzCore', 'SystemConfiguration', 'MobileCoreServices', 'Security', 'Photos'
   s.dependency       'pop'
   s.dependency       'DACircularProgress'
-  s.dependency       'SDWebImage'
+  s.dependency       'YYWebImage'
 end

@@ -1,6 +1,6 @@
 {
   "name": "SSImageBrowser",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "summary": "IDMPhotoBrowser in Swift",
   "description": "IDMPhotoBrowser in Swift\nPhoto Browser / Viewer inspired by Facebook's and Tweetbot's with ARC support, swipe-to-dismiss, image progress and more",
   "homepage": "https://github.com/CodeEagle/SSImageBrowser",
@@ -17,7 +17,7 @@
   },
   "source": {
     "git": "https://github.com/CodeEagle/SSImageBrowser.git",
-    "tag": "2.0.5"
+    "tag": "2.0.6"
   },
   "social_media_url": "https://twitter.com/_SelfStudio",
   "platforms": {
@@ -44,7 +44,7 @@
     "DACircularProgress": [
 
     ],
-    "SDWebImage": [
+    "YYWebImage": [
 
     ]
   }

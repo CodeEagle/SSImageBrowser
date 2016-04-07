@@ -1,25 +1,31 @@
 PODS:
   - DACircularProgress (2.3.1)
   - pop (1.0.9)
-  - SDWebImage (3.7.5):
-    - SDWebImage/Core (= 3.7.5)
-  - SDWebImage/Core (3.7.5)
-  - SSImageBrowser (2.0.5):
+  - SSImageBrowser (2.0.6):
     - DACircularProgress
     - pop
-    - SDWebImage
+    - YYWebImage
+  - YYCache (1.0.3)
+  - YYImage (1.0.1):
+    - YYImage/Core (= 1.0.1)
+  - YYImage/Core (1.0.1)
+  - YYWebImage (1.0.3):
+    - YYCache
+    - YYImage
 
 DEPENDENCIES:
   - SSImageBrowser (from `../`)
 
 EXTERNAL SOURCES:
   SSImageBrowser:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
-  SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
-  SSImageBrowser: a5ba24c043f2894fafb5ac32aa437612af322164
+  SSImageBrowser: c2b61dcb10de078614ae97a93e572c2255577852
+  YYCache: 282f35b5b0990833d0b7a06d864a87141a021da2
+  YYImage: b41b45bc5f32bfcdf67bdfb9c09da9e9832357c0
+  YYWebImage: 8da75a611fd0d2e0f58a273f9ca0bc731614cb0d
 
 COCOAPODS: 0.39.0

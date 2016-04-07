@@ -85,13 +85,17 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-SSImageBrowser_Example/DACircularProgress.framework"
-  install_framework "Pods-SSImageBrowser_Example/SDWebImage.framework"
   install_framework "Pods-SSImageBrowser_Example/SSImageBrowser.framework"
+  install_framework "Pods-SSImageBrowser_Example/YYCache.framework"
+  install_framework "Pods-SSImageBrowser_Example/YYImage.framework"
+  install_framework "Pods-SSImageBrowser_Example/YYWebImage.framework"
   install_framework "Pods-SSImageBrowser_Example/pop.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-SSImageBrowser_Example/DACircularProgress.framework"
-  install_framework "Pods-SSImageBrowser_Example/SDWebImage.framework"
   install_framework "Pods-SSImageBrowser_Example/SSImageBrowser.framework"
+  install_framework "Pods-SSImageBrowser_Example/YYCache.framework"
+  install_framework "Pods-SSImageBrowser_Example/YYImage.framework"
+  install_framework "Pods-SSImageBrowser_Example/YYWebImage.framework"
   install_framework "Pods-SSImageBrowser_Example/pop.framework"
 fi
