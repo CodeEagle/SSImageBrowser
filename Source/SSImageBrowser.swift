@@ -1095,7 +1095,7 @@ extension SSImageBrowser {
 				page.removeFromSuperview()
 			}
 		}
-		let _ = visiblePages.exclusiveOr(recycledPages)
+		visiblePages = visiblePages.subtract(recycledPages)
 
 		var pages = Set<SSZoomingScrollView>()
 		if recycledPages.count > 2 {
