@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import pop
 // MARK: - SSImageBrowserDelegate
 @objc public protocol SSImageBrowserDelegate: class {
 	optional func photoBrowser(photoBrowser: SSImageBrowser, didShowPhotoAtIndex index: Int)
@@ -82,6 +81,7 @@ public class SSImageBrowser: UIViewController {
 	private var firstY: CGFloat = 0
 
 	private var hideTask: CancelableTask!
+	private var _completion: dispatch_block_t?
 
 	private func areControlsHidden() -> Bool {
 		if let t = toolbar {
@@ -1193,16 +1193,14 @@ extension SSImageBrowser {
 	// MARK: - pop Animation
 
 	private func animateView(view: UIView, toFrame frame: CGRect, completion: (() -> ())!) {
-		let ainamtion = POPSpringAnimation(propertyNamed: kPOPViewFrame)
-		ainamtion.springBounciness = 6
-		ainamtion.dynamicsMass = 1
-		ainamtion.toValue = NSValue(CGRect: frame)
-		view.pop_addAnimation(ainamtion, forKey: nil)
-		ainamtion.completionBlock = {
-			(aniamte, finish) in
+
+		UIView.animateWithDuration(0.3, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+			view.frame = frame
+		}) { (b) in
 			completion?()
 		}
 	}
+
 }
 
 extension SSImageBrowser {
