@@ -341,11 +341,10 @@ extension SSImageBrowser {
 		self.view.setNeedsLayout()
 	}
 
-	public func setInitialPageIndex(var index: Int) {
+	public func setInitialPageIndex(index: Int) {
 		let count = numberOfPhotos()
-		if index >= count {
-			index = count - 1
-		}
+		var i = index
+		if index >= count { i = count - 1 }
 		initalPageIndex = index
 		currentPageIndex = index
 		if self.isViewLoaded() {
