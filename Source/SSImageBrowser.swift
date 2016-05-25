@@ -345,10 +345,10 @@ extension SSImageBrowser {
 		let count = numberOfPhotos()
 		var i = index
 		if index >= count { i = count - 1 }
-		initalPageIndex = index
-		currentPageIndex = index
-		if self.isViewLoaded() {
-			jumpToPageAtIndex(index)
+		initalPageIndex = i
+		currentPageIndex = i
+		if isViewLoaded() {
+			jumpToPageAtIndex(i)
 			if !viewIsActive {
 				tilePages()
 			}
