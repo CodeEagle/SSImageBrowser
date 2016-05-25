@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SSImageBrowser"
-  s.version          = "2.0.7"
+  s.version          = "2.0.8"
   s.summary          = "IDMPhotoBrowser in Swift"
   s.description      = <<-DESC
                        IDMPhotoBrowser in Swift
@@ -28,5 +28,4 @@ Pod::Spec.new do |s|
   s.source_files = 'Source/*.swift'
   s.frameworks = 'MessageUI', 'QuartzCore', 'SystemConfiguration', 'MobileCoreServices', 'Security', 'Photos'
   s.dependency       'DACircularProgress'
-  s.dependency       'YYWebImage'
 end

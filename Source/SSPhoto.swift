@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import YYWebImage
 import Photos
+
 public final class SSPhoto: NSObject {
 	public var aCaption: String!
 	public var photoURL: NSURL!
@@ -21,6 +21,7 @@ public final class SSPhoto: NSObject {
 	public var asset: PHAsset!
 	public var targetSize: CGSize!
 	private var requestId: PHImageRequestID!
+	private var _task: NSURLSessionTask?
 
 	convenience public init(image: UIImage) {
 		self.init()
@@ -132,6 +133,16 @@ extension SSPhoto {
 	public func underlyingImage() -> UIImage! {
 		return aUnderlyingImage
 	}
+
+	private func createDownloadTask(url: NSURL) {
+		_task?.cancel()
+		let downloadRequest = NSMutableURLRequest(URL: url, cachePolicy: .UseProtocolCachePolicy, timeoutInterval: 30)
+		let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: self, delegateQueue: NSOperationQueue.mainQueue())
+
+		_task = session.downloadTaskWithRequest(downloadRequest)
+		_task?.resume()
+	}
+
 	public func loadUnderlyingImageAndNotify() {
 		loadingInProgress = true
 		if aUnderlyingImage != nil {
@@ -142,27 +153,29 @@ extension SSPhoto {
 					self.loadImageFromFileAsync()
 				})
 			} else if let url = photoURL {
-				let key = url.absoluteString
 
-				if let cache = YYImageCache.sharedCache().getImageForKey(key) {
-					dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
-						self.aUnderlyingImage = cache
-						self.imageLoadingComplete()
-					}
-					return
-				}
-				YYWebImageManager.sharedManager().requestImageWithURL(url, options: YYWebImageOptions.AllowBackgroundTask, progress: { [weak self](read, total) in
-					guard let sself = self else { return }
-					let progress = CGFloat(read) / CGFloat(total)
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						sself.progressUpdateBlock?(progress)
-					})
-					}, transform: nil, completion: { [weak self](image, _url, _, _, _) in
-					if let image = image, sself = self {
-						sself.aUnderlyingImage = image
-						sself.imageLoadingComplete()
-					}
+				dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), { () -> Void in
+					self.createDownloadTask(url)
 				})
+//				if let cache = YYImageCache.sharedCache().getImageForKey(key) {
+//					dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+//						self.aUnderlyingImage = cache
+//						self.imageLoadingComplete()
+//					}
+//					return
+//				}
+//				YYWebImageManager.sharedManager().requestImageWithURL(url, options: YYWebImageOptions.AllowBackgroundTask, progress: { [weak self](read, total) in
+//					guard let sself = self else { return }
+//					let progress = CGFloat(read) / CGFloat(total)
+//					dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//						sself.progressUpdateBlock?(progress)
+//					})
+//					}, transform: nil, completion: { [weak self](image, _url, _, _, _) in
+//					if let image = image, sself = self {
+//						sself.aUnderlyingImage = image
+//						sself.imageLoadingComplete()
+//					}
+//				})
 			} else if let photo = asset {
 				var size = CGSizeMake(CGFloat(photo.pixelWidth), CGFloat(photo.pixelHeight))
 				if let asize = targetSize {
@@ -290,9 +303,11 @@ public extension PHAsset {
 	}
 
 	public func imageWithSize(size: CGSize, progress: PHAssetImageProgressHandler!, done: (UIImage!) -> ()) -> PHImageRequestID! {
-		let cache = YYImageCache.sharedCache()
-		let key = self.identifier + "_\(size.width)x\(size.height)"
-		if let img = cache.getImageForKey(key) {
+		let cache = NSURLCache.sharedURLCache()
+		let key = identifier + "_\(size.width)x\(size.height)"
+		guard let url = NSURL(string: "https://\(key)") else { return nil }
+		let request = NSURLRequest(URL: url)
+		if let resp = cache.cachedResponseForRequest(request), img = UIImage(data: resp.data) {
 			done(img)
 			return nil
 		}
@@ -308,7 +323,11 @@ public extension PHAsset {
 
 		return manager.requestImageForAsset(self, targetSize: size, contentMode: .AspectFit, options: option, resultHandler: { (result, info) -> Void in
 			if let img = result {
-				cache.setImage(img, forKey: key)
+				let urlresp = NSURLResponse(URL: url, MIMEType: nil, expectedContentLength: 0, textEncodingName: nil)
+				if let data = UIImageJPEGRepresentation(img, 1) {
+					let resp = NSCachedURLResponse(response: urlresp, data: data)
+					cache.storeCachedResponse(resp, forRequest: request)
+				}
 			}
 			done(result)
 		})

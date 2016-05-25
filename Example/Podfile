@@ -6,14 +6,7 @@ use_frameworks!
 
 inhibit_all_warnings!
 
-post_install do |installer|
-    `find Pods -regex 'Pods/pop.*\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)pop\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
-    `find Pods -regex 'Pods/YYWebImage.*\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)YYWebImage\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
-    `find Pods -name "YYWebImage.h" -print0 | xargs -0  sed -i '' 's/#import \\<YYImage\\/YYImage.h\\>//'`
-    `find Pods -name "YYWebImage.h" -print0 | xargs -0  sed -i '' 's/#import \\<YYCache\\/YYCache.h\\>//'`
-end
-
-target 'SSImageBrowser_Example', :exclusive => true do
+target :SSImageBrowser_Example do
   pod "SSImageBrowser", :path => "../"
 end
 
