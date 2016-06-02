@@ -111,7 +111,7 @@ public class SSImageBrowser: UIViewController {
 	}
 
 	private func initialize() {
-		view.tintColor = UIColor(red: 0.369, green: 0.549, blue: 0.310, alpha: 1)
+		view.tintColor = UIColor.whiteColor()
 		hidesBottomBarWhenPushed = true
 		automaticallyAdjustsScrollViewInsets = false
 		modalPresentationStyle = UIModalPresentationStyle.Custom
