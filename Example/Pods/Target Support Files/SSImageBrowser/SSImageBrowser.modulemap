@@ -1,6 +1,0 @@
-framework module SSImageBrowser {
-  umbrella header "SSImageBrowser-umbrella.h"
-
-  export *
-  module * { export * }
-}

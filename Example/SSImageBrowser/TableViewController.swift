@@ -139,11 +139,10 @@ class TableViewController: UITableViewController {
 					NSURL(string: "http://ww1.sinaimg.cn/bmiddle/822f7258gw1f2nggaujw2j21hc0u0nc0.jpg")!,
 					NSURL(string: "http://ww3.sinaimg.cn/bmiddle/822f7258gw1f2ngglkdc5j21hc0u0n90.jpg")!
 				])
-
 				photos += photosWithURL
 			}
 		}
-
+		showBrowser(photos, indexPath: indexPath)
 	}
 
 	private func showBrowser(photos: [SSPhoto], indexPath: NSIndexPath) {

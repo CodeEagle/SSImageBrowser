@@ -335,10 +335,8 @@ extension SSImageBrowser {
 extension SSImageBrowser {
 	public func reloadData() {
 		releaseAllUnderlyingPhotos()
-
 		performLayout()
-
-		self.view.setNeedsLayout()
+		view.setNeedsLayout()
 	}
 
 	public func setInitialPageIndex(index: Int) {
