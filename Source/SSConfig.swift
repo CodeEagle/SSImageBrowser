@@ -13,38 +13,38 @@ let PADDING: CGFloat = 10
 let PAGE_INDEX_TAG_OFFSET = 1000
 public typealias SSProgressUpdateBlock = (CGFloat)->()
 
-func PAGE_INDEX(page: SSZoomingScrollView)->Int {
+func PAGE_INDEX(_ page: SSZoomingScrollView)->Int {
     let index = page.tag - PAGE_INDEX_TAG_OFFSET
     return index
 }
-func SYSTEM_VERSION_EQUAL_TO(to:String) -> Bool{
-    let ver = UIDevice.currentDevice().systemVersion as NSString
-    return ver.compare(to, options: NSStringCompareOptions.NumericSearch) == NSComparisonResult.OrderedSame
+func SYSTEM_VERSION_EQUAL_TO(_ to:String) -> Bool{
+    let ver = UIDevice.current.systemVersion as NSString
+    return ver.compare(to, options: NSString.CompareOptions.numeric) == ComparisonResult.orderedSame
 }
 
-func SYSTEM_VERSION_GREATER_THAN(to:String) -> Bool{
-    let ver = UIDevice.currentDevice().systemVersion as NSString
-    return ver.compare(to, options: NSStringCompareOptions.NumericSearch) == NSComparisonResult.OrderedDescending
+func SYSTEM_VERSION_GREATER_THAN(_ to:String) -> Bool{
+    let ver = UIDevice.current.systemVersion as NSString
+    return ver.compare(to, options: NSString.CompareOptions.numeric) == ComparisonResult.orderedDescending
 }
 
-func SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(to:String) -> Bool{
-    let ver = UIDevice.currentDevice().systemVersion as NSString
-    return ver.compare(to, options: NSStringCompareOptions.NumericSearch) != NSComparisonResult.OrderedAscending
+func SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(_ to:String) -> Bool{
+    let ver = UIDevice.current.systemVersion as NSString
+    return ver.compare(to, options: NSString.CompareOptions.numeric) != ComparisonResult.orderedAscending
 }
 
-func SYSTEM_VERSION_LESS_THAN(to:String) -> Bool{
-    let ver = UIDevice.currentDevice().systemVersion as NSString
-    return ver.compare(to, options: NSStringCompareOptions.NumericSearch) == NSComparisonResult.OrderedAscending
+func SYSTEM_VERSION_LESS_THAN(_ to:String) -> Bool{
+    let ver = UIDevice.current.systemVersion as NSString
+    return ver.compare(to, options: NSString.CompareOptions.numeric) == ComparisonResult.orderedAscending
 }
 
-func SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(to:String) -> Bool{
-    let ver = UIDevice.currentDevice().systemVersion as NSString
-    return ver.compare(to, options: NSStringCompareOptions.NumericSearch) != NSComparisonResult.OrderedDescending
+func SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(_ to:String) -> Bool{
+    let ver = UIDevice.current.systemVersion as NSString
+    return ver.compare(to, options: NSString.CompareOptions.numeric) != ComparisonResult.orderedDescending
 }
 
-func SSPhotoBrowserLocalizedStrings(key: String) -> String{
-    if let path = NSBundle(forClass: SSImageBrowser.self).pathForResource("IDMPBLocalizations", ofType: "bundle") {
-        if let bundle = NSBundle(path: path) {
+func SSPhotoBrowserLocalizedStrings(_ key: String) -> String{
+    if let path = Bundle(for: SSImageBrowser.self).path(forResource: "IDMPBLocalizations", ofType: "bundle") {
+        if let bundle = Bundle(path: path) {
             return NSLocalizedString(key, bundle: bundle, comment: key)
         }
         

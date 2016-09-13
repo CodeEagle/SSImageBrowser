@@ -8,25 +8,25 @@
 
 import UIKit
 
-public class SSCaptionView: UIView {
+open class SSCaptionView: UIView {
 	var photo: SSPhoto!
 
-	private var labelPadding: CGFloat {
+	fileprivate var labelPadding: CGFloat {
 		return 10
 	}
-	private var label: UILabel!
+	fileprivate var label: UILabel!
 
 	convenience init(aPhoto: SSPhoto) {
-		let screenBound = UIScreen.mainScreen().bounds
+		let screenBound = UIScreen.main.bounds
 		var screenWidth = screenBound.size.width
-		let orientation = UIDevice.currentDevice().orientation
-		if orientation == .LandscapeLeft ||
-		orientation == .LandscapeRight {
+		let orientation = UIDevice.current.orientation
+		if orientation == .landscapeLeft ||
+		orientation == .landscapeRight {
 			screenWidth = screenBound.size.height
 		}
-		self.init(frame: CGRectMake(0, 0, screenWidth, 44))
+		self.init(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 44))
 		photo = aPhoto
-		opaque = false
+		isOpaque = false
 		setBackground()
 		setupCaption()
 	}
@@ -39,11 +39,11 @@ public class SSCaptionView: UIView {
 		super.init(coder: aDecoder)
 	}
 
-	public override func layoutSubviews() {
+	open override func layoutSubviews() {
 		super.layoutSubviews()
 		if let view = viewWithTag(101) {
-			let len = max(UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height)
-			view.frame = CGRectMake(0, -100, len, 130 + 100)
+			let len = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+			view.frame = CGRect(x: 0, y: -100, width: len, height: 130 + 100)
 		}
 	}
 	/**
@@ -58,19 +58,19 @@ public class SSCaptionView: UIView {
 	 subclass to the photo browsers -photoBrowser:photoAtIndex: delegate method
 
 	 */
-	public func setupCaption() {
+	open func setupCaption() {
 
-		label = UILabel(frame: CGRectMake(labelPadding, 0, self.bounds.size.width - labelPadding * 2, self.bounds.size.height))
-		label.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-		label.opaque = false
-		label.backgroundColor = UIColor.clearColor()
-		label.textAlignment = .Center
-		label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+		label = UILabel(frame: CGRect(x: labelPadding, y: 0, width: self.bounds.size.width - labelPadding * 2, height: self.bounds.size.height))
+		label.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		label.isOpaque = false
+		label.backgroundColor = UIColor.clear
+		label.textAlignment = .center
+		label.lineBreakMode = NSLineBreakMode.byWordWrapping
 		label.numberOfLines = 3
-		label.textColor = UIColor.whiteColor()
+		label.textColor = UIColor.white
 		label.shadowColor = UIColor(white: 0, alpha: 0.5)
-		label.shadowOffset = CGSizeMake(0, 1)
-		label.font = UIFont.systemFontOfSize(17)
+		label.shadowOffset = CGSize(width: 0, height: 1)
+		label.font = UIFont.systemFont(ofSize: 17)
 		label.text = ""
 		if let cap = photo?.caption() {
 			label.text = cap
@@ -88,47 +88,39 @@ public class SSCaptionView: UIView {
 
 	 :returns: CGSize
 	 */
-	public override func sizeThatFits(size: CGSize) -> CGSize {
-		if label.text == nil {
-			return CGSizeZero
-		}
-
-		if let b = label.text?.isEmpty {
-			if b {
-				return CGSizeZero
-			}
-		}
-
+	open override func sizeThatFits(_ size: CGSize) -> CGSize {
+		if label.text == nil || label.text?.isEmpty == true { return .zero }
 		var maxHeight: CGFloat = 9999
 		if label.numberOfLines > 0 {
-			maxHeight = label.font.leading * CGFloat(label.numberOfLines)
+			maxHeight = label.font.lineHeight * CGFloat(label.numberOfLines)
 		}
 
 		let text = label.text!
 		let width = size.width - labelPadding * 2
-		let font = label.font
+		let font = label.font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
 
 		let attributedText = NSAttributedString(string: text, attributes: [NSFontAttributeName: font])
 
-		let rect = attributedText.boundingRectWithSize(CGSizeMake(width, maxHeight), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
+        let size = CGSize(width: width, height: maxHeight)
+		let rect = attributedText.boundingRect(with: size , options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)
 
 		let textSize = rect.size
 
-		return CGSizeMake(size.width, textSize.height + labelPadding * 2)
+		return CGSize(width: size.width, height: textSize.height + labelPadding * 2)
 	}
 }
 
 extension SSCaptionView {
 
 	func setBackground() {
-		let len = max(UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height)
-		let fadeView = UIView(frame: CGRectMake(0, -100, len, 130 + 100)) // Static width, autoresizingMask is not working
+		let len = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+		let fadeView = UIView(frame: CGRect(x: 0, y: -100, width: len, height: 130 + 100)) // Static width, autoresizingMask is not working
 		fadeView.tag = 101
 		let gradient = CAGradientLayer()
 		gradient.frame = fadeView.bounds
-		gradient.colors = [UIColor(white: 0, alpha: 0).CGColor, UIColor(white: 0, alpha: 0.8).CGColor]
-		fadeView.layer.insertSublayer(gradient, atIndex: 0)
-		fadeView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+		gradient.colors = [UIColor(white: 0, alpha: 0).cgColor, UIColor(white: 0, alpha: 0.8).cgColor]
+		fadeView.layer.insertSublayer(gradient, at: 0)
+		fadeView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		addSubview(fadeView)
 	}
 }
