@@ -80,14 +80,15 @@ public class SSZoomingScrollView: UIScrollView {
 		displayImage()
 	}
 
-	public func setProgress(progress: CGFloat, forPhoto aPhoto: SSPhoto!) {
+	public func setProgress(progress: CGFloat, forPhoto aPhoto: SSPhoto?) {
+        guard let targetPhoto = aPhoto else { return }
 		if let url = photo?.photoURL?.absoluteString {
-			if aPhoto.photoURL.absoluteString == url {
+			if targetPhoto.photoURL.absoluteString == url {
 				if progressView.progress < progress {
 					progressView.progress = progress
 				}
 			}
-		} else if aPhoto.asset.identifier == photo?.asset?.identifier {
+		} else if targetPhoto.asset.identifier == photo?.asset?.identifier {
 			if progressView.progress < progress {
 				progressView.progress = progress
 			}
