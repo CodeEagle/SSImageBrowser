@@ -8,12 +8,12 @@
 
 import UIKit
 public protocol SSTapDetectingImageViewDelegate: class {
-	func imageView(imageView: UIImageView, singleTapDetected touch: UITouch)
-	func imageView(imageView: UIImageView, doubleTapDetected touch: UITouch)
-	func imageView(imageView: UIImageView, tripleTapDetected touch: UITouch)
+	func imageView(_ imageView: UIImageView, singleTapDetected touch: UITouch)
+	func imageView(_ imageView: UIImageView, doubleTapDetected touch: UITouch)
+	func imageView(_ imageView: UIImageView, tripleTapDetected touch: UITouch)
 }
-public class SSTapDetectingImageView: UIImageView {
-	public weak var tapDelegate: SSTapDetectingImageViewDelegate!
+open class SSTapDetectingImageView: UIImageView {
+	open weak var tapDelegate: SSTapDetectingImageViewDelegate!
 
 	override init(image: UIImage!) {
 		super.init(image: image)
@@ -36,12 +36,12 @@ public class SSTapDetectingImageView: UIImageView {
 	}
 
 	func initialize() {
-		self.userInteractionEnabled = true
+		self.isUserInteractionEnabled = true
 	}
 }
 extension SSTapDetectingImageView {
 
-	public override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+	open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		guard let touch = touches.first else {
 			return
 		}
@@ -60,6 +60,6 @@ extension SSTapDetectingImageView {
 		default:
 			break
 		}
-		self.nextResponder()?.touchesEnded(touches, withEvent: event)
+		self.next?.touchesEnded(touches, with: event)
 	}
 }
