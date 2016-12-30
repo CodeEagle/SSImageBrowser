@@ -40,6 +40,7 @@ open class SSImageBrowser: UIViewController {
 	open weak var leftArrowSelectedImage: UIImage!
 	open weak var rightArrowImage: UIImage!
 	open weak var rightArrowSelectedImage: UIImage!
+    open var doneButtonFrame: CGRect?
 	open var doneButtonImage: UIImage!
 	open var doneButtonImageForeground: UIImage!
 	open weak var scaleImage: UIImage!
@@ -253,16 +254,16 @@ extension SSImageBrowser {
 
 		if doneButtonImage == nil && doneButtonImageForeground == nil {
 			doneButton.setTitleColor(UIColor(white: 0.9, alpha: 0.9), for: .highlighted)
-			doneButton.setTitle(SSPhotoBrowserLocalizedStrings("X"), for: UIControlState())
+			doneButton.setTitle(SSPhotoBrowserLocalizedStrings("X"), for: .normal)
 			doneButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11)
 			doneButton.backgroundColor = UIColor(white: 0.1, alpha: 0.5)
 			doneButton.sizeToFit()
 			doneButton.layer.cornerRadius = doneButton.bounds.size.width / 2
 		} else if doneButtonImageForeground != nil {
-			doneButton.setImage(doneButtonImageForeground, for: UIControlState())
+			doneButton.setImage(doneButtonImageForeground, for: .normal)
 			doneButton.contentMode = .center
 		} else if doneButtonImage != nil {
-			doneButton.setBackgroundImage(doneButtonImage, for: UIControlState())
+			doneButton.setBackgroundImage(doneButtonImage, for: .normal)
 			doneButton.contentMode = .scaleAspectFit
 		}
 	}
@@ -660,7 +661,7 @@ extension SSImageBrowser {
     
 	fileprivate func customToolbarButtonImage(_ image: UIImage, imageSelected selectedImage: UIImage, action: Selector) -> UIButton {
 		let button = UIButton(type: .custom)
-		button.setBackgroundImage(image, for: UIControlState())
+		button.setBackgroundImage(image, for: .normal)
 		button.setBackgroundImage(selectedImage, for: .disabled)
 		button.addTarget(self, action: action, for: .touchUpInside)
 		button.contentMode = .center
@@ -980,6 +981,7 @@ extension SSImageBrowser {
 	}
 
 	fileprivate func frameForDoneButtonAtOrientation(_ orientation: UIInterfaceOrientation) -> CGRect {
+        if let rect = doneButtonFrame { return rect }
 		let screenBound = view.bounds
 		let screenWidth = screenBound.size.width
 		return CGRect(x: screenWidth - 75, y: 30, width: 55, height: 26)
