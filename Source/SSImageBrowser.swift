@@ -20,7 +20,7 @@ public let UIApplicationSaveImageToCameraRoll = "UIApplicationSaveImageToCameraR
 open class SSImageBrowser: UIViewController {
 
 	// MARK: - public
-	open weak var delegate: SSImageBrowserDelegate!
+	open weak var delegate: SSImageBrowserDelegate?
 	open lazy var displayToolbar = true
 	open lazy var displayCounterLabel = true
 	open lazy var displayArrowButton = true
@@ -120,7 +120,7 @@ open class SSImageBrowser: UIViewController {
 		modalPresentationCapturesStatusBarAppearance = true
 		applicationWindow = UIApplication.shared.delegate?.window!
 		// Listen for IDMPhoto notifications
-		NotificationCenter.default.addObserver(self, selector: #selector(handleSSPhotoLoadingDidEndNotification(_:)), name: NSNotification.Name(rawValue: SSPHOTO_LOADING_DID_END_NOTIFICATION), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleSSPhotoLoadingDidEndNotification(_:)), name: NSNotification.Name.SSPhotoLoadingDidEnd, object: nil)
 	}
 
 	// MARK: - SSPhoto Loading Notification
@@ -534,8 +534,8 @@ extension SSImageBrowser {
 		// Captions
 		var captionViews = Set<SSCaptionView>()
 		for page in visiblePages {
-			if page.captionView != nil {
-				captionViews.insert(page.captionView)
+			if let cap = page.captionView {
+				captionViews.insert(cap)
 			}
 		}
 
@@ -781,9 +781,9 @@ extension SSImageBrowser {
 	fileprivate func performCloseAnimationWithScrollView(_ scrollView: SSZoomingScrollView) {
 		let fadeAlpha = 1 - fabs(scrollView.frame.origin.y) / scrollView.frame.size.height
 
-		var imageFromView = scrollView.photo.underlyingImage()
+		var imageFromView = scrollView.photo?.underlyingImage()
 		if imageFromView == nil {
-			imageFromView = scrollView.photo.placeholderImage()
+			imageFromView = scrollView.photo?.placeholderImage()
 		}
 
 		typealias Completion = () -> ()

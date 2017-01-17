@@ -10,29 +10,32 @@ import UIKit
 
 open class SSZoomingScrollView: UIScrollView {
 
-	open var photo: SSPhoto!
-	open var captionView: SSCaptionView!
-	open var photoImageView: SSTapDetectingImageView!
-	open var tapView: SSTapDetectingView!
+	open var photo: SSPhoto?
+	open var captionView: SSCaptionView?
+	open var photoImageView: SSTapDetectingImageView?
+	open var tapView: SSTapDetectingView?
 
-	fileprivate var progressView: ProgressView!
-	fileprivate weak var photoBrowser: SSImageBrowser!
+	fileprivate var progressView: ProgressView?
+	fileprivate weak var photoBrowser: SSImageBrowser?
 
 	convenience init(aPhotoBrowser: SSImageBrowser) {
 		self.init(frame: CGRect.zero)
 		photoBrowser = aPhotoBrowser
 		// Tap view for background
-		tapView = SSTapDetectingView(frame: self.bounds)
-		tapView.tapDelegate = self
-		tapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-		tapView.backgroundColor = UIColor.clear
-		addSubview(tapView)
+		let _tapView = SSTapDetectingView(frame: self.bounds)
+		_tapView.tapDelegate = self
+		_tapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		_tapView.backgroundColor = UIColor.clear
+		addSubview(_tapView)
+        tapView = _tapView
 
 		// Image view
-		photoImageView = SSTapDetectingImageView(frame: CGRect.zero)
-		photoImageView.tapDelegate = self
-		photoImageView.backgroundColor = UIColor.clear
-		addSubview(photoImageView)
+		let _photoImageView = SSTapDetectingImageView(frame: CGRect.zero)
+		_photoImageView.tapDelegate = self
+		_photoImageView.backgroundColor = UIColor.clear
+		addSubview(_photoImageView)
+        photoImageView = _photoImageView
+        
 		let screenBound = UIScreen.main.bounds
 		var screenWidth = screenBound.size.width
 		var screenHeight = screenBound.size.height
@@ -44,11 +47,12 @@ open class SSZoomingScrollView: UIScrollView {
 		}
 
 		// Progress view
-		let color = aPhotoBrowser.progressTintColor != nil ? photoBrowser.progressTintColor : UIColor(white: 1.0, alpha: 1)
+		let color = aPhotoBrowser.progressTintColor != nil ? aPhotoBrowser.progressTintColor : UIColor(white: 1.0, alpha: 1)
 		progressView = ProgressView(color: color!, frame: CGRect(x: (screenWidth - 35) / 2, y: (screenHeight - 35) / 2, width: 35.0, height: 35.0))
-		progressView.progress = 0
-		progressView.tag = 101
-		addSubview(progressView)
+		progressView?.progress = 0
+		progressView?.tag = 101
+        if let v = progressView { addSubview(v) }
+
 		// Setup
 		backgroundColor = UIColor.clear
 		delegate = self
@@ -69,25 +73,24 @@ open class SSZoomingScrollView: UIScrollView {
 		photo = nil
 		captionView?.removeFromSuperview()
 		captionView = nil
-		self.tag = 0
+		tag = 0
 	}
 
 	open func setAPhoto(_ aPhoto: SSPhoto) {
-		photoImageView.image = nil // Release image
-		if aPhoto != photo {
-			photo = aPhoto
-		}
+		photoImageView?.image = nil // Release image
+		if aPhoto != photo { photo = aPhoto }
 		displayImage()
 	}
 
 	open func setProgress(_ progress: CGFloat, forPhoto aPhoto: SSPhoto!) {
+        guard let progressView = progressView else { return }
 		if let url = photo?.photoURL?.absoluteString {
-			if aPhoto.photoURL.absoluteString == url {
+			if aPhoto.photoURL?.absoluteString == url {
 				if progressView.progress < progress {
 					progressView.progress = progress
 				}
 			}
-		} else if aPhoto.asset.identifier == photo?.asset?.identifier {
+		} else if aPhoto.asset?.identifier == photo?.asset?.identifier {
 			if progressView.progress < progress {
 				progressView.progress = progress
 			}
@@ -105,30 +108,30 @@ open class SSZoomingScrollView: UIScrollView {
 			self.contentSize = CGSize(width: 0, height: 0)
 
 			// Get image from browser as it handles ordering of fetching
-			if let img = photoBrowser.imageForPhoto(p) {
+			if let img = photoBrowser?.imageForPhoto(p) {
 				// Hide ProgressView
 				// progressView.alpha = 0.0f
-				progressView.removeFromSuperview()
+				progressView?.removeFromSuperview()
 
 				// Set image
-				photoImageView.image = img
-				photoImageView.isHidden = false
+				photoImageView?.image = img
+				photoImageView?.isHidden = false
 
 				// Setup photo frame
 				var photoImageViewFrame = CGRect.zero
 				photoImageViewFrame.origin = CGPoint.zero
 				photoImageViewFrame.size = img.size
 
-				photoImageView.frame = photoImageViewFrame
+				photoImageView?.frame = photoImageViewFrame
 				self.contentSize = photoImageViewFrame.size
 
 				// Set zoom to minimum zoom
 				setMaxMinZoomScalesForCurrentBounds()
 			} else {
 				// Hide image view
-				photoImageView.isHidden = true
+				photoImageView?.isHidden = true
 
-				progressView.alpha = 1.0
+				progressView?.alpha = 1.0
 			}
 
 			self.setNeedsLayout()
@@ -136,7 +139,7 @@ open class SSZoomingScrollView: UIScrollView {
 	}
 
 	open func displayImageFailure() {
-		progressView.removeFromSuperview()
+		progressView?.removeFromSuperview()
 	}
 
 	open func setMaxMinZoomScalesForCurrentBounds() {
@@ -146,13 +149,13 @@ open class SSZoomingScrollView: UIScrollView {
 		self.zoomScale = 1
 
 		// fail
-		if photoImageView.image == nil {
+		if photoImageView?.image == nil {
 			return
 		}
 
 		// Sizes
-		let boundsSize = self.bounds.size
-		let imageSize = photoImageView.frame.size
+		let boundsSize = bounds.size
+		let imageSize = photoImageView?.frame.size ?? .zero
 
 		// Calculate Min
 		let xScale = boundsSize.width / imageSize.width // the scale needed to perfectly fit the image width-wise
@@ -182,20 +185,20 @@ open class SSZoomingScrollView: UIScrollView {
 		self.zoomScale = minScale
 
 		// Reset position
-		photoImageView.frame = CGRect(x: 0, y: 0, width: photoImageView.frame.size.width, height: photoImageView.frame.size.height)
+		photoImageView?.frame = CGRect(x: 0, y: 0, width: photoImageView?.frame.size.width ?? 0, height: photoImageView?.frame.size.height ?? 0)
 		self.setNeedsLayout()
 	}
 
 	open override func layoutSubviews() {
 		// Update tap view frame
-		tapView.frame = self.bounds
+		tapView?.frame = bounds
 
 		// Super
 		super.layoutSubviews()
 
 		// Center the image as it becomes smaller than the size of the screen
 		let boundsSize = self.bounds.size
-		var frameToCenter = photoImageView.frame
+		var frameToCenter = photoImageView?.frame ?? .zero
 
 		// Horizontally
 		if frameToCenter.size.width < boundsSize.width {
@@ -212,8 +215,8 @@ open class SSZoomingScrollView: UIScrollView {
 		}
 
 		// Center
-		if !photoImageView.frame.equalTo(frameToCenter) {
-			photoImageView.frame = frameToCenter
+		if photoImageView?.frame.equalTo(frameToCenter) == false {
+			photoImageView?.frame = frameToCenter
 		}
 	}
 
@@ -226,15 +229,15 @@ extension SSZoomingScrollView: UIScrollViewDelegate {
 	}
 
 	public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-		photoBrowser.cancelControlHiding()
+		photoBrowser?.cancelControlHiding()
 	}
 
 	public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
-		photoBrowser.cancelControlHiding()
+		photoBrowser?.cancelControlHiding()
 	}
 
 	public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-		photoBrowser.hideControlsAfterDelay()
+		photoBrowser?.hideControlsAfterDelay()
 	}
 
 	public func scrollViewDidZoom(_ scrollView: UIScrollView) {
@@ -246,27 +249,23 @@ extension SSZoomingScrollView: UIScrollViewDelegate {
 extension SSZoomingScrollView: SSTapDetectingViewDelegate, SSTapDetectingImageViewDelegate {
 
 	fileprivate func handleSingleTap(_ touchPoint: CGPoint) {
-		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
-			self.photoBrowser.toggleControls()
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { () -> Void in
+			self.photoBrowser?.toggleControls()
 		}
 	}
 
 	fileprivate func handleDoubleTap(_ touchPoint: CGPoint) {
 
 		// Cancel any single tap handling
-		NSObject.cancelPreviousPerformRequests(withTarget: photoBrowser)
-
+        if let p = photoBrowser { NSObject.cancelPreviousPerformRequests(withTarget: p) }
 		// Zoom
-		if self.zoomScale == self.maximumZoomScale {
-			self.setZoomScale(self.minimumZoomScale, animated: true)
-
+		if zoomScale == maximumZoomScale {
+			setZoomScale(minimumZoomScale, animated: true)
 		} else {
-			self.zoom(to: CGRect(x: touchPoint.x, y: touchPoint.y, width: 1, height: 1), animated: true)
-
+			zoom(to: CGRect(x: touchPoint.x, y: touchPoint.y, width: 1, height: 1), animated: true)
 		}
-
 		// Delay controls
-		photoBrowser.hideControlsAfterDelay()
+		photoBrowser?.hideControlsAfterDelay()
 	}
 
 	public func imageView(_ imageView: UIImageView, singleTapDetected touch: UITouch) {

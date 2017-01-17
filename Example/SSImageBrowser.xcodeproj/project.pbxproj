@@ -22,7 +22,6 @@
 		169974A21D0022F000B6E953 /* SSConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169974981D0022F000B6E953 /* SSConfig.swift */; };
 		169974A31D0022F000B6E953 /* SSImageBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169974991D0022F000B6E953 /* SSImageBrowser.swift */; };
 		169974A41D0022F000B6E953 /* SSPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1699749A1D0022F000B6E953 /* SSPhoto.swift */; };
-		169974A51D0022F000B6E953 /* SSPhotoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1699749B1D0022F000B6E953 /* SSPhotoProtocol.swift */; };
 		169974A61D0022F000B6E953 /* SSTapDetectingImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1699749C1D0022F000B6E953 /* SSTapDetectingImageView.swift */; };
 		169974A71D0022F000B6E953 /* SSTapDetectingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1699749D1D0022F000B6E953 /* SSTapDetectingView.swift */; };
 		169974A81D0022F000B6E953 /* SSZoomingScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1699749E1D0022F000B6E953 /* SSZoomingScrollView.swift */; };
@@ -81,7 +80,6 @@
 		169974981D0022F000B6E953 /* SSConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSConfig.swift; path = ../../Source/SSConfig.swift; sourceTree = "<group>"; };
 		169974991D0022F000B6E953 /* SSImageBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSImageBrowser.swift; path = ../../Source/SSImageBrowser.swift; sourceTree = "<group>"; };
 		1699749A1D0022F000B6E953 /* SSPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSPhoto.swift; path = ../../Source/SSPhoto.swift; sourceTree = "<group>"; };
-		1699749B1D0022F000B6E953 /* SSPhotoProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSPhotoProtocol.swift; path = ../../Source/SSPhotoProtocol.swift; sourceTree = "<group>"; };
 		1699749C1D0022F000B6E953 /* SSTapDetectingImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSTapDetectingImageView.swift; path = ../../Source/SSTapDetectingImageView.swift; sourceTree = "<group>"; };
 		1699749D1D0022F000B6E953 /* SSTapDetectingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSTapDetectingView.swift; path = ../../Source/SSTapDetectingView.swift; sourceTree = "<group>"; };
 		1699749E1D0022F000B6E953 /* SSZoomingScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSZoomingScrollView.swift; path = ../../Source/SSZoomingScrollView.swift; sourceTree = "<group>"; };
@@ -141,7 +139,6 @@
 				169974981D0022F000B6E953 /* SSConfig.swift */,
 				169974991D0022F000B6E953 /* SSImageBrowser.swift */,
 				1699749A1D0022F000B6E953 /* SSPhoto.swift */,
-				1699749B1D0022F000B6E953 /* SSPhotoProtocol.swift */,
 				1699749C1D0022F000B6E953 /* SSTapDetectingImageView.swift */,
 				1699749D1D0022F000B6E953 /* SSTapDetectingView.swift */,
 				1699749E1D0022F000B6E953 /* SSZoomingScrollView.swift */,
@@ -380,7 +377,6 @@
 				169974A61D0022F000B6E953 /* SSTapDetectingImageView.swift in Sources */,
 				169974A41D0022F000B6E953 /* SSPhoto.swift in Sources */,
 				169974A31D0022F000B6E953 /* SSImageBrowser.swift in Sources */,
-				169974A51D0022F000B6E953 /* SSPhotoProtocol.swift in Sources */,
 				169974A11D0022F000B6E953 /* SSCaptionView.swift in Sources */,
 				169974A21D0022F000B6E953 /* SSConfig.swift in Sources */,
 				169974A81D0022F000B6E953 /* SSZoomingScrollView.swift in Sources */,

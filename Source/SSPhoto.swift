@@ -10,17 +10,17 @@ import UIKit
 import Photos
 
 public final class SSPhoto: NSObject {
-	public var aCaption: String!
-	public var photoURL: URL!
-	public var progressUpdateBlock: SSProgressUpdateBlock!
-	public var aPlaceholderImage: UIImage!
+	public var aCaption: String?
+	public var photoURL: URL?
+	public var progressUpdateBlock: SSProgressUpdateBlock?
+	public var aPlaceholderImage: UIImage?
 
-	fileprivate var aUnderlyingImage: UIImage!
-	fileprivate var loadingInProgress: Bool!
-	public var photoPath: String!
-	public var asset: PHAsset!
-	public var targetSize: CGSize!
-	fileprivate var requestId: PHImageRequestID!
+	fileprivate var aUnderlyingImage: UIImage?
+	fileprivate var loadingInProgress: Bool?
+	public var photoPath: String?
+	public var asset: PHAsset?
+	public var targetSize: CGSize?
+	fileprivate var requestId: PHImageRequestID?
 	fileprivate var _task: URLSessionTask?
 
 	convenience public init(image: UIImage) {
@@ -65,8 +65,8 @@ public final class SSPhoto: NSObject {
 extension SSPhoto: URLSessionDownloadDelegate {
 	public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
 		let downloadedImage = UIImage(data: try! Data(contentsOf: location))
-		self.aUnderlyingImage = downloadedImage
-		DispatchQueue.global(qos: .default).async { self.imageLoadingComplete() }
+		aUnderlyingImage = downloadedImage
+		DispatchQueue.main.async { self.imageLoadingComplete() }
 	}
 	public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
 		let progress = CGFloat(totalBytesWritten) / CGFloat(totalBytesExpectedToWrite)
@@ -256,10 +256,10 @@ extension SSPhoto {
 
 	func loadImageFromFileAsync() {
 		autoreleasepool { () -> () in
-			if let img = UIImage(contentsOfFile: photoPath) {
+			if let path = photoPath, let img = UIImage(contentsOfFile: path) {
 				aUnderlyingImage = img
 			} else {
-				if let img = decodedImageWithImage(aUnderlyingImage) {
+				if let image = aUnderlyingImage, let img = decodedImageWithImage(image) {
 					aUnderlyingImage = img
 				}
 			}
@@ -271,7 +271,7 @@ extension SSPhoto {
 
 	func imageLoadingComplete() {
 		loadingInProgress = false
-		NotificationCenter.default.post(name: Notification.Name(rawValue: SSPHOTO_LOADING_DID_END_NOTIFICATION), object: self)
+		NotificationCenter.default.post(name: Notification.Name.SSPhotoLoadingDidEnd, object: self)
 	}
 }
 

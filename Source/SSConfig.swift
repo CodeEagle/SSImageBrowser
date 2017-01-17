@@ -8,7 +8,9 @@
 
 import Foundation
 
-let SSPHOTO_LOADING_DID_END_NOTIFICATION = "SSPHOTO_LOADING_DID_END_NOTIFICATION"
+extension Notification.Name {
+    static var SSPhotoLoadingDidEnd: Notification.Name { return Notification.Name(rawValue: "SSPHOTO_LOADING_DID_END_NOTIFICATION") }
+}
 let PADDING: CGFloat = 10
 let PAGE_INDEX_TAG_OFFSET = 1000
 public typealias SSProgressUpdateBlock = (CGFloat)->()

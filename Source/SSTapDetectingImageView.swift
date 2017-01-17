@@ -12,7 +12,8 @@ public protocol SSTapDetectingImageViewDelegate: class {
 	func imageView(_ imageView: UIImageView, doubleTapDetected touch: UITouch)
 	func imageView(_ imageView: UIImageView, tripleTapDetected touch: UITouch)
 }
-open class SSTapDetectingImageView: UIImageView {
+public final class SSTapDetectingImageView: UIImageView {
+    
 	open weak var tapDelegate: SSTapDetectingImageViewDelegate!
 
 	override init(image: UIImage!) {
@@ -35,31 +36,18 @@ open class SSTapDetectingImageView: UIImageView {
 		initialize()
 	}
 
-	func initialize() {
-		self.isUserInteractionEnabled = true
-	}
+	private func initialize() { isUserInteractionEnabled = true }
+    
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let tapCount = touch.tapCount
+        switch tapCount {
+        case 1: tapDelegate?.imageView(self, singleTapDetected: touch)
+        case 2: tapDelegate?.imageView(self, doubleTapDetected: touch)
+        case 3: tapDelegate?.imageView(self, tripleTapDetected: touch)
+        default: break
+        }
+        next?.touchesEnded(touches, with: event)
+    }
 }
-extension SSTapDetectingImageView {
-
-	open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-		guard let touch = touches.first else {
-			return
-		}
-
-		let tapCount = touch.tapCount
-		switch tapCount {
-		case 1:
-			tapDelegate?.imageView(self, singleTapDetected: touch)
-			break
-		case 2:
-			tapDelegate?.imageView(self, doubleTapDetected: touch)
-			break
-		case 3:
-			tapDelegate?.imageView(self, tripleTapDetected: touch)
-			break
-		default:
-			break
-		}
-		self.next?.touchesEnded(touches, with: event)
-	}
-}
+ 
