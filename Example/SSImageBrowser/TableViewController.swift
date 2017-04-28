@@ -230,6 +230,8 @@ class TableViewController: UITableViewController {
 		browser.displayArrowButton = true
 		browser.displayCounterLabel = true
 		browser.usePopAnimation = true
+//        browser.displayDownloadButton = false
+        browser.alwysShowDownloadButton = true
 		browser.scaleImage = buttonSender.currentImage
 		if (buttonSender.tag == 102) {
 			browser.useWhiteBackgroundColor = true

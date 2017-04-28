@@ -26,6 +26,9 @@ open class SSImageBrowser: UIViewController {
 	open lazy var displayArrowButton = true
 	open lazy var displayActionButton = true
 	open lazy var displayDoneButton = true
+    open lazy var displayDownloadButton = true
+    open lazy var alwysShowDownloadButton = false
+    
 	open lazy var useWhiteBackgroundColor = false
 	open lazy var arrowButtonsChangePhotosAnimated = true
 	open lazy var forceHideStatusBar = false
@@ -43,6 +46,10 @@ open class SSImageBrowser: UIViewController {
     open var doneButtonFrame: CGRect?
 	open var doneButtonImage: UIImage!
 	open var doneButtonImageForeground: UIImage!
+    
+    open var downLoadButtonFrame: CGRect?
+    open var downLoadButtonImage: UIImage?
+    open var downLoadButtonImageForeground : UIImage?
 	open weak var scaleImage: UIImage!
 
 	open weak var trackTintColor: UIColor!
@@ -65,11 +72,13 @@ open class SSImageBrowser: UIViewController {
 
 	fileprivate var panGesture: UIPanGestureRecognizer!
 	fileprivate var doneButton: UIButton!
+    fileprivate var downLoadButton : UIButton!
 	fileprivate var toolbar: UIToolbar!
 	fileprivate var previousButton: UIBarButtonItem!
 	fileprivate var nextButton: UIBarButtonItem!
 	fileprivate var actionButton: UIBarButtonItem!
 	fileprivate var counterButton: UIBarButtonItem!
+    
 	fileprivate var counterLabel: UILabel!
 	fileprivate var actionsSheet: UIAlertController!
 	fileprivate var activityViewController: UIActivityViewController!
@@ -202,7 +211,13 @@ extension SSImageBrowser {
 		doneButton.frame = frameForDoneButtonAtOrientation(currentOrientation)
 		doneButton.alpha = 1.0
 		doneButton.addTarget(self, action: #selector(doneButtonPressed), for: .touchUpInside)
-
+        
+        //downLoadButton
+        downLoadButton = UIButton(type: .custom)
+        downLoadButton.frame = frameForDownloadButtonAtOrientation(currentOrientation)
+        downLoadButton.alpha = 1.0
+        downLoadButton.addTarget(self, action: #selector(downloadButtonPressed), for:.touchUpInside)
+        
 		let bundle = Bundle(for: SSImageBrowser.self)
 		var imageBundle: Bundle?
 		if let path = bundle.path(forResource: "IDMPhotoBrowser", ofType: "bundle") {
@@ -276,11 +291,26 @@ extension SSImageBrowser {
 			doneButton.setBackgroundImage(doneButtonImage, for: .normal)
 			doneButton.contentMode = .scaleAspectFit
 		}
+        
+        if downLoadButtonImage == nil && downLoadButtonImageForeground == nil{
+            downLoadButton.setTitleColor(UIColor(white: 0.9, alpha: 0.9), for: .highlighted)
+            downLoadButton.setTitle("↓", for: .normal)
+            downLoadButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22)
+            downLoadButton.backgroundColor = UIColor.clear
+            downLoadButton.sizeToFit()
+        } else if downLoadButtonImageForeground != nil {
+            downLoadButton.setImage(downLoadButtonImageForeground, for: .normal)
+            downLoadButton.contentMode = .center
+        } else if downLoadButtonImage != nil {
+            downLoadButton.setBackgroundImage(downLoadButtonImage, for: .normal)
+            downLoadButton.contentMode = .scaleAspectFit
+        }
 	}
 
 	open override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		viewIsActive = true
+        
 	}
 
 	open override func viewWillLayoutSubviews() {
@@ -294,6 +324,9 @@ extension SSImageBrowser {
 
 		// Done button
 		doneButton.frame = frameForDoneButtonAtOrientation(currentOrientation)
+        
+        //Downloadbutton 
+        downLoadButton.frame = frameForDownloadButtonAtOrientation(currentOrientation)
 
 		// Remember index
 		let indexPriorToLayout = currentPageIndex
@@ -559,6 +592,9 @@ extension SSImageBrowser {
 			self.navigationController?.navigationBar.alpha = alpha
 			self.toolbar.alpha = alpha
 			self.doneButton.alpha = alpha
+            if !self.alwysShowDownloadButton{
+                self.downLoadButton.alpha = alpha
+            }
 			for v in captionViews {
 				v.alpha = alpha
 			}
@@ -888,6 +924,10 @@ extension SSImageBrowser {
 		if displayDoneButton && self.navigationController?.navigationBar == nil {
 			view.addSubview(doneButton)
 		}
+        
+        if displayDownloadButton{
+            view.addSubview(downLoadButton)
+        }
 
 		let fixedLeftSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: self, action: nil)
 		fixedLeftSpace.width = 32
@@ -1005,6 +1045,14 @@ extension SSImageBrowser {
 		let screenWidth = screenBound.size.width
 		return CGRect(x: screenWidth - 75, y: 30, width: 55, height: 26)
 	}
+    
+    fileprivate func frameForDownloadButtonAtOrientation(_ orientation: UIInterfaceOrientation )-> CGRect{
+        if let rect = downLoadButtonFrame {return rect}
+        let screenBound = view.bounds
+        let screenWidth = screenBound.size.width
+        let screenHeight = screenBound.size.height
+        return CGRect(x: (screenWidth - 26) / 2.0, y: screenHeight - 120, width: 36, height: 36)
+    }
 
 	fileprivate func frameForCaptionView(_ captionView: SSCaptionView, atIndex index: Int) -> CGRect {
 		let pageFrame = frameForPageAtIndex(index)
@@ -1182,7 +1230,11 @@ extension SSImageBrowser {
 			dismissPhotoBrowserAnimated(true)
 		}
 	}
-
+    
+    func downloadButtonPressed(){
+        NotificationCenter.default.post(name: Notification.Name(rawValue: UIApplicationSaveImageToCameraRoll), object: self)
+    }
+    
 	func actionButtonPressed(_ sender: AnyObject) {
 		let photo = photoAtIndex(currentPageIndex)
 		let count = self.numberOfPhotos()
