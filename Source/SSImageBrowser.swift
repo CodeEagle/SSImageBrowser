@@ -83,6 +83,8 @@ open class SSImageBrowser: UIViewController {
 
 	fileprivate var hideTask: CancelableTask!
 	fileprivate var _completion: (() -> ())?
+    
+    fileprivate var _isUserTap : Bool = false
 
 	fileprivate func areControlsHidden() -> Bool {
 		if let t = toolbar {
@@ -156,6 +158,14 @@ extension SSImageBrowser {
 		senderViewForAnimation = view
 		performPresentAnimation()
 	}
+    
+    public convenience init(aPhotos: [SSPhoto], useTapToClose: Bool, animatedFromView view: UIView! = nil){
+        self.init()
+        photos = aPhotos
+        senderViewForAnimation = view
+        performPresentAnimation()
+        _isUserTap = useTapToClose
+    }
 }
 // MARK: - Life Cycle
 extension SSImageBrowser {
@@ -428,7 +438,10 @@ extension SSImageBrowser: UIScrollViewDelegate {
 }
 // MARK: - Private Func
 extension SSImageBrowser {
-
+    //MARK: tap
+    func tapGesture(_ tap : UITapGestureRecognizer){
+        dismiss(animated: true, completion: nil)
+    }
 	// MARK: - Pan Gesture
 	func panGestureRecognized(_ sender: UIPanGestureRecognizer) {
 		// Initial Setup
@@ -511,6 +524,7 @@ extension SSImageBrowser {
 		}
 	}
 	// MARK: - Control Hiding / Showing
+    
 
 	func cancelControlHiding() {
 		// If a timer exists then cancel and release
@@ -920,6 +934,11 @@ extension SSImageBrowser {
 		if !disableVerticalSwipe {
 			view.addGestureRecognizer(panGesture)
 		}
+        
+        if _isUserTap{
+            let tap = UITapGestureRecognizer.init(target: self, action: #selector(SSImageBrowser.tapGesture(_:)))
+            view.addGestureRecognizer(tap)
+        }
 	}
 
 	// MARK: - Toolbar

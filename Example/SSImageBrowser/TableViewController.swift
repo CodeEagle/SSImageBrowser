@@ -50,7 +50,7 @@ class TableViewController: UITableViewController {
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask { return .all }
 	// MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
 
     
@@ -66,7 +66,9 @@ class TableViewController: UITableViewController {
 			rows = 3
 		} else if (section == 2) {
 			rows = 0
-		}
+        }else if section == 3{
+            rows = 1
+        }
 
 		return rows
 	}
@@ -80,6 +82,8 @@ class TableViewController: UITableViewController {
             atitle = "Multiple photos"
         } else if (section == 2) {
             atitle = "Photos from library"
+        } else if section == 3{
+            atitle = "TapToClose"
         }
         
         return atitle
@@ -101,6 +105,8 @@ class TableViewController: UITableViewController {
             else if (indexPath.row == 2) { cell?.textLabel?.text = "Photos from Flickr - Custom" }
         } else if indexPath.section == 2 {
             cell?.textLabel?.text = "Photos from library"
+        } else if indexPath.section == 3{
+            cell?.textLabel?.text = "TapToClose"
         }
         return cell!
     }
@@ -145,7 +151,14 @@ class TableViewController: UITableViewController {
 				])
 				photos += photosWithURL
 			}
-		}
+        }else if indexPath.section == 3{
+            if indexPath.row == 0{
+                photo = SSPhoto(filePath: Bundle.main.path(forResource: "photo1l", ofType: "jpg")!)
+                photo.aCaption = "Grotto of the Madonna"
+                photos.append(photo)
+            }
+        }
+        
 		showBrowser(photos: photos, indexPath: indexPath as NSIndexPath)
 	}
 
@@ -167,7 +180,12 @@ class TableViewController: UITableViewController {
 				browser.displayCounterLabel = true
 				browser.useWhiteBackgroundColor = true
 			}
-		}
+        }else if indexPath.section == 3{
+            if indexPath.row == 0{
+                let vc = SSImageBrowser.init(aPhotos: photos, useTapToClose: true, animatedFromView: nil)
+                present(vc, animated: true, completion: nil)
+            }
+        }
 		// Show
 		present(browser, animated: true, completion: nil)
 		tableView.deselectRow(at: indexPath as IndexPath, animated: true)
