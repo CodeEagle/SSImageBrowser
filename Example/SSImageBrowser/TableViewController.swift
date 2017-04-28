@@ -222,7 +222,9 @@ class TableViewController: UITableViewController {
 		}
 
 		// Create and setup browser
-		let browser = SSImageBrowser(aPhotos: photos, animatedFromView: buttonSender) // using initWithPhotos:animatedFromView: method to use the zoom-in animation
+//		let browser = SSImageBrowser(aPhotos: photos, animatedFromView: buttonSender)
+        let browser = SSImageBrowser(aPhotos: photos, useTapToClose: true, animatedFromView: buttonSender)
+        // using initWithPhotos:animatedFromView: method to use the zoom-in animation
 		browser.delegate = self
 		browser.displayActionButton = true
 		browser.displayArrowButton = true
