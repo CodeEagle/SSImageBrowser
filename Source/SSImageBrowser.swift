@@ -936,7 +936,7 @@ extension SSImageBrowser {
 		}
         
         if _isUserTap{
-            let tap = UITapGestureRecognizer.init(target: self, action: #selector(SSImageBrowser.tapGesture(_:)))
+            let tap = UITapGestureRecognizer(target: self, action: #selector(SSImageBrowser.tapGesture(_:)))
             view.addGestureRecognizer(tap)
         }
 	}
