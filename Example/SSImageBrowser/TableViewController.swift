@@ -232,6 +232,9 @@ class TableViewController: UITableViewController {
 		browser.usePopAnimation = true
 //        browser.displayDownloadButton = false
         browser.alwysShowDownloadButton = true
+//        let att = NSAttributedString(string: "downL", attributes: [NSForegroundColorAttributeName: UIColor.red, NSFontAttributeName: UIFont.systemFont(ofSize: 12)])
+//        browser.downLoadButtonTitle = att
+        browser.downLoadButtonFrame = CGRect(x: 200, y: 600, width: 50, height: 44)
 		browser.scaleImage = buttonSender.currentImage
 		if (buttonSender.tag == 102) {
 			browser.useWhiteBackgroundColor = true

@@ -28,6 +28,8 @@ open class SSImageBrowser: UIViewController {
 	open lazy var displayDoneButton = true
     open lazy var displayDownloadButton = true
     open lazy var alwysShowDownloadButton = false
+    open var downLoadButtonTitle : NSAttributedString?
+    open var downLoadButtonSelectedTitle: NSAttributedString?
     
 	open lazy var useWhiteBackgroundColor = false
 	open lazy var arrowButtonsChangePhotosAnimated = true
@@ -93,7 +95,7 @@ open class SSImageBrowser: UIViewController {
 	fileprivate var hideTask: CancelableTask!
 	fileprivate var _completion: (() -> ())?
     
-    fileprivate var _isUserTap : Bool = false
+    fileprivate var _isUseTap : Bool = false
 
 	fileprivate func areControlsHidden() -> Bool {
 		if let t = toolbar {
@@ -173,7 +175,7 @@ extension SSImageBrowser {
         photos = aPhotos
         senderViewForAnimation = view
         performPresentAnimation()
-        _isUserTap = useTapToClose
+        _isUseTap = useTapToClose
     }
 }
 // MARK: - Life Cycle
@@ -305,6 +307,15 @@ extension SSImageBrowser {
             downLoadButton.setBackgroundImage(downLoadButtonImage, for: .normal)
             downLoadButton.contentMode = .scaleAspectFit
         }
+        
+        if downLoadButtonTitle != nil {
+            downLoadButton.setAttributedTitle(downLoadButtonTitle, for: .normal)
+            downLoadButton.sizeToFit()
+        }
+        if downLoadButtonSelectedTitle != nil{
+            downLoadButton.setAttributedTitle(downLoadButtonSelectedTitle, for: .selected)
+        }
+        
 	}
 
 	open override func viewDidAppear(_ animated: Bool) {
@@ -975,7 +986,7 @@ extension SSImageBrowser {
 			view.addGestureRecognizer(panGesture)
 		}
         
-        if _isUserTap{
+        if _isUseTap{
             let tap = UITapGestureRecognizer(target: self, action: #selector(SSImageBrowser.tapGesture(_:)))
             view.addGestureRecognizer(tap)
         }
@@ -1051,7 +1062,7 @@ extension SSImageBrowser {
         let screenBound = view.bounds
         let screenWidth = screenBound.size.width
         let screenHeight = screenBound.size.height
-        return CGRect(x: (screenWidth - 26) / 2.0, y: screenHeight - 120, width: 36, height: 36)
+        return CGRect(x: (screenWidth - 36) / 2.0, y: screenHeight - 120, width: 36, height: 36)
     }
 
 	fileprivate func frameForCaptionView(_ captionView: SSCaptionView, atIndex index: Int) -> CGRect {
