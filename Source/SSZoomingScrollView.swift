@@ -81,13 +81,14 @@ open class SSZoomingScrollView: UIScrollView {
 	}
 
 	open func setProgress(_ progress: CGFloat, forPhoto aPhoto: SSPhoto!) {
+        guard let _photo = aPhoto else { return }
 		if let url = photo?.photoURL?.absoluteString {
-			if aPhoto.photoURL.absoluteString == url {
+			if _photo.photoURL.absoluteString == url {
 				if progressView.progress < progress {
 					progressView.progress = progress
 				}
 			}
-		} else if aPhoto.asset.identifier == photo?.asset?.identifier {
+		} else if _photo.asset.identifier == photo?.asset?.identifier {
 			if progressView.progress < progress {
 				progressView.progress = progress
 			}
